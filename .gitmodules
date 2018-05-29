@@ -1,0 +1,3 @@
+[submodule "samples/TuioPad"]
+	path = samples/TuioPad
+	url = https://github.com/mkalten/TuioPad.git
