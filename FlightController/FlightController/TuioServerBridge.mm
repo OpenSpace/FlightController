@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TUIOBridge.h"
+#import "TuioServerBridge.h"
 #import "TUIO/TuioServer.h"
 
 
-@implementation TUIOBridge
+@implementation TuioServer
 
 TUIO::TuioServer *myObject;
 

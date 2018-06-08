@@ -1,5 +1,5 @@
 //
-//  TUIOBridge.h
+//  TuiServerBridge.h
 //  FlightController
 //
 //  Created by Matthew Territo on 6/8/18.
@@ -7,7 +7,7 @@
 //
 #import <Foundation/Foundation.h>
 
-@interface TUIOBridge: NSObject
+@interface TuioServer: NSObject
 - (void)testFunction;
 @end
 
