@@ -1,0 +1,3 @@
+[submodule "FlightController/FlightController/ext/TUIO11_CPP"]
+	path = FlightController/FlightController/ext/TUIO11_CPP
+	url = https://github.com/mkalten/TUIO11_CPP.git
