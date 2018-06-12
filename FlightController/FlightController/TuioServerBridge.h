@@ -6,7 +6,6 @@
 //  Copyright © 2018 OpenSpace. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-
 // MARK: Forward declarations
 @class TuioCursor;
 @class TuioBlob;
@@ -23,6 +22,7 @@
 - (void)initFrame;
 - (void)initFrame:(TuioTime *)time;
 
+- (NSInteger)addTuioCursor:(float)a b:(float)b;
 - (TuioCursor *)addTuioCursor:(float)x y:(float)y;
 - (TuioBlob *)addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
 

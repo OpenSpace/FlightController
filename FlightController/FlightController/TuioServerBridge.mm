@@ -1,5 +1,5 @@
 //
-//  TUIOBridge.mm
+//  TuioServerBridge.mm
 //  FlightController
 //
 //  Created by Matthew Territo on 6/8/18.
@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TuioServerBridge.h"
 #import "TUIO/TuioServer.h"
+#import "TUIO/TuioCursor.h"
 #import "TUIO/TuioTime.h"
 
 
@@ -53,6 +54,11 @@
 
 - (void)initFrame:(TuioTime *)time {
     obj_->initFrame( *((__bridge TUIO::TuioTime *) time) );
+}
+
+- (NSInteger)addTuioCursor:(float)a b:(float)b {
+    obj_->addTuioCursor(a, b);
+    return 1;
 }
 
 - (TuioCursor *)addTuioCursor:(float)x y:(float)y {

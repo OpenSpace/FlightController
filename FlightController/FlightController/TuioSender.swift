@@ -24,6 +24,22 @@ struct TuioCursorInfo {
         self.h = h
         self.a = a
     }
+    
+    func getMeasurements() -> (Float, Float, Float, Float, Float) {
+        return (x, y, w, h, a)
+    }
+    
+    func isNew() -> Bool {
+        return isAlive && !wasAlive
+    }
+    
+    func isMoving() -> Bool {
+        return isAlive && wasAlive && moved
+    }
+    
+    func isReleased() -> Bool {
+        return wasAlive && !isAlive
+    }
 }
 
 class TuioSender {
@@ -56,10 +72,25 @@ class TuioSender {
         tuioServer.initFrame()
         
         // TODO: Handle Cursors
+        for i in 1...TuioSender.MAX_TOUCHES {
+            updateCursor(cursor: cursors[i])
+        }
         
         tuioServer.stopUntouchedMovingCursors();
         // if (do_blobs) tuioServer.stopUntouchedMovingBlobs();
         tuioServer.commitFrame();
+    }
+    
+    private func updateCursor(cursor: TuioCursorInfo) {
+        var (x, y, w, h, a) = cursor.getMeasurements()
+        if (cursor.isNew()) {
+            tuioServer.addTuioCursor(x, b: y)
+            // Add a new cursor
+        } else if (cursor.isReleased()) {
+            // Remove the cursor
+        } else if (cursor.isMoving()) {
+            // Update the values
+        }
     }
     
     func close() {
