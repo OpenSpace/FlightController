@@ -43,12 +43,12 @@
     obj_->initFrame(*((__bridge TUIO::TuioTime *) time));
 }
 
-- (void)addTuioCursor:(float)x y:(float)y {
-    obj_->addTuioCursor(x, y);
+- (TuioCursor *)addTuioCursor:(float)x y:(float)y {
+    return (__bridge TuioCursor *) obj_->addTuioCursor(x, y);
 }
 
-- (void)addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
-    obj_->addTuioBlob(x, y, a, w, h, f);
+- (TuioBlob * )addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+    return (__bridge TuioBlob *) obj_->addTuioBlob(x, y, a, w, h, f);
 }
 
 - (void)removeTuioCursor:(TuioCursor *)cursor {

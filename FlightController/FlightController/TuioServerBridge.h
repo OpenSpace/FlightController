@@ -21,8 +21,8 @@
 // MARK: Interaction Handlers
 - (void)initFrame:(TuioTime *)time;
 
-- (void)addTuioCursor:(float)x y:(float)y;
-- (void)addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
+- (TuioCursor *)addTuioCursor:(float)x y:(float)y;
+- (TuioBlob *)addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
 
 - (void)removeTuioCursor:(TuioCursor *)cursor;
 - (void)removeTuioBlob:(TuioBlob *)blob;
