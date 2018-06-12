@@ -38,7 +38,9 @@
 // MARK: Setters
 - (void)enableObjectProfile:(BOOL) flag;
 - (void)enableBlobProfile:(BOOL) flag;
-
+- (void)enablePeriodicMessages;
+- (void)enablePeriodicMessages:(int) interval;
+- (void)disablePeriodicMessages;
 
 @end
 

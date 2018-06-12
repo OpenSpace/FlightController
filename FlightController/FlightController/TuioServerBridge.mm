@@ -88,6 +88,18 @@
     obj_->enableBlobProfile(flag);
 }
 
+- (void)enablePeriodicMessages {
+    [self enablePeriodicMessages:1];
+}
+
+- (void)enablePeriodicMessages:(int)interval {
+    obj_->enablePeriodicMessages(interval);
+}
+
+- (void)disablePeriodicMessages {
+    obj_->disablePeriodicMessages();
+}
+
 // MARK: Members
 TUIO::TuioServer *obj_;
 
