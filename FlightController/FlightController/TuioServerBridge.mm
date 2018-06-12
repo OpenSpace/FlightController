@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TuioServerBridge.h"
 #import "TUIO/TuioServer.h"
+#import "TUIO/TuioTime.h"
 
 
 @implementation TuioServer
@@ -23,24 +24,35 @@
     return self;
 }
 
-- (id)initWithHost:(const NSString *) host port:(int)port {
+- (id)initWithHost:(const NSString *) host port:(NSInteger)port {
     self = [super init];
     if (self) {
         // init variables
-        obj_ = new TUIO::TuioServer([host UTF8String], port);
+        obj_ = new TUIO::TuioServer([host UTF8String], (int) port);
     }
     return self;
 }
 
-- (void)initialize:(NSString *)host port:(int)port { }
+- (void)initialize:(NSString *)host port:(NSInteger)port { }
 
 - (void)setSourceName:(NSString *)name host:(NSString *)host {
     obj_->setSourceName([name UTF8String], [host UTF8String]);
 }
 
+-(void)dealloc {
+    if (obj_) {
+        delete obj_;
+    }
+    obj_ = nil;
+}
+
 // MARK: Interaction Handlers
+- (void)initFrame {
+    obj_->initFrame( TUIO::TuioTime::getSessionTime() );
+}
+
 - (void)initFrame:(TuioTime *)time {
-    obj_->initFrame(*((__bridge TUIO::TuioTime *) time));
+    obj_->initFrame( *((__bridge TUIO::TuioTime *) time) );
 }
 
 - (TuioCursor *)addTuioCursor:(float)x y:(float)y {
@@ -92,8 +104,8 @@
     [self enablePeriodicMessages:1];
 }
 
-- (void)enablePeriodicMessages:(int)interval {
-    obj_->enablePeriodicMessages(interval);
+- (void)enablePeriodicMessages:(NSInteger)interval {
+    obj_->enablePeriodicMessages( (int) interval);
 }
 
 - (void)disablePeriodicMessages {

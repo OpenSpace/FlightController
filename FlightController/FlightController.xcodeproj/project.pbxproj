@@ -14,6 +14,9 @@
 		435164B720B617CF00A88CBD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 435164B520B617CF00A88CBD /* LaunchScreen.storyboard */; };
 		435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164C120B617CF00A88CBD /* FlightControllerTests.swift */; };
 		435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164CC20B617CF00A88CBD /* FlightControllerUITests.swift */; };
+		43D2237820D05F560008A36D /* TuioSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D2237720D05F560008A36D /* TuioSender.swift */; };
+		43D2237920D05F560008A36D /* TuioSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D2237720D05F560008A36D /* TuioSender.swift */; };
+		43D2237A20D05F560008A36D /* TuioSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D2237720D05F560008A36D /* TuioSender.swift */; };
 		43E5579B20CB06B2006A2730 /* TuioServerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43E5579A20CB06B2006A2730 /* TuioServerBridge.mm */; };
 		43E5579C20CB06B2006A2730 /* TuioServerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43E5579A20CB06B2006A2730 /* TuioServerBridge.mm */; };
 		43E5579D20CB06B2006A2730 /* TuioServerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 43E5579A20CB06B2006A2730 /* TuioServerBridge.mm */; };
@@ -140,6 +143,7 @@
 		435164C820B617CF00A88CBD /* FlightControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlightControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164CC20B617CF00A88CBD /* FlightControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightControllerUITests.swift; sourceTree = "<group>"; };
 		435164CE20B617CF00A88CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		43D2237720D05F560008A36D /* TuioSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TuioSender.swift; sourceTree = "<group>"; };
 		43E5579720CB0699006A2730 /* TuioServerBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TuioServerBridge.h; sourceTree = "<group>"; };
 		43E5579820CB06B1006A2730 /* FlightControllerTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlightControllerTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		43E5579920CB06B1006A2730 /* FlightControllerUITests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FlightControllerUITests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -261,6 +265,7 @@
 			children = (
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
 				435164AE20B617CE00A88CBD /* ViewController.swift */,
+				43D2237720D05F560008A36D /* TuioSender.swift */,
 				435164B020B617CE00A88CBD /* Main.storyboard */,
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
 				435164B520B617CF00A88CBD /* LaunchScreen.storyboard */,
@@ -565,6 +570,7 @@
 				43E5579B20CB06B2006A2730 /* TuioServerBridge.mm in Sources */,
 				43E5583220CB0FC1006A2730 /* TuioObject.cpp in Sources */,
 				43E5584120CB0FC1006A2730 /* UdpSender.cpp in Sources */,
+				43D2237820D05F560008A36D /* TuioSender.swift in Sources */,
 				43E5581D20CB0FC1006A2730 /* TcpSender.cpp in Sources */,
 				43E5581120CB0FC1006A2730 /* FlashSender.cpp in Sources */,
 				43E5580520CB0FC1006A2730 /* OscTypes.cpp in Sources */,
@@ -595,6 +601,7 @@
 				43E5583020CB0FC1006A2730 /* TuioManager.cpp in Sources */,
 				43E5584520CB0FC1006A2730 /* WebSockSender.cpp in Sources */,
 				43E5582A20CB0FC1006A2730 /* TuioCursor.cpp in Sources */,
+				43D2237920D05F560008A36D /* TuioSender.swift in Sources */,
 				435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */,
 				43E5580320CB0FC1006A2730 /* OscReceivedElements.cpp in Sources */,
 				43E5581520CB0FC1006A2730 /* OneEuroFilter.cpp in Sources */,
@@ -629,6 +636,7 @@
 				43E5583120CB0FC1006A2730 /* TuioManager.cpp in Sources */,
 				43E5584620CB0FC1006A2730 /* WebSockSender.cpp in Sources */,
 				43E5582B20CB0FC1006A2730 /* TuioCursor.cpp in Sources */,
+				43D2237A20D05F560008A36D /* TuioSender.swift in Sources */,
 				435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */,
 				43E5580420CB0FC1006A2730 /* OscReceivedElements.cpp in Sources */,
 				43E5581620CB0FC1006A2730 /* OneEuroFilter.cpp in Sources */,

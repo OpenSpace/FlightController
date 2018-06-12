@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let a: TuioServer! = TuioServer.init(host: "192.168.84.100", port: 3333)
+        let b: TuioSender! = TuioSender(host: "192.168.84.185", port: 3333, tcp: 0, ip: "192.168.84.185", blobs: false)
     }
 
     override func didReceiveMemoryWarning() {

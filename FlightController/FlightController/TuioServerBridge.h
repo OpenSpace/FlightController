@@ -14,11 +14,13 @@
 
 @interface TuioServer: NSObject
 // MARK: Initializaters
-- (id)initWithHost:(NSString *)host port:(int)port;
-- (void)initialize:(NSString *)host port:(int)port;
+- (id)initWithHost:(NSString *)host port:(NSInteger)port;
+- (void)initialize:(NSString *)host port:(NSInteger)port;
 - (void)setSourceName:(NSString *)name host:(NSString *)host;
+- (void)dealloc;
 
 // MARK: Interaction Handlers
+- (void)initFrame;
 - (void)initFrame:(TuioTime *)time;
 
 - (TuioCursor *)addTuioCursor:(float)x y:(float)y;
@@ -39,7 +41,7 @@
 - (void)enableObjectProfile:(BOOL) flag;
 - (void)enableBlobProfile:(BOOL) flag;
 - (void)enablePeriodicMessages;
-- (void)enablePeriodicMessages:(int) interval;
+- (void)enablePeriodicMessages:(NSInteger) interval;
 - (void)disablePeriodicMessages;
 
 @end
