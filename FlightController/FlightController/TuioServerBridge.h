@@ -5,10 +5,13 @@
 //  Created by Matthew Territo on 6/8/18.
 //  Copyright © 2018 OpenSpace. All rights reserved.
 //
+
 #import <Foundation/Foundation.h>
+#import "TuioCursorBridge.h"
+#import "TuioBlobBridge.h"
 // MARK: Forward declarations
-@class TuioCursor;
-@class TuioBlob;
+
+
 @class TuioTime;
 
 @interface TuioServer: NSObject
@@ -22,15 +25,14 @@
 - (void)initFrame;
 - (void)initFrame:(TuioTime *)time;
 
-- (NSInteger)addTuioCursor:(float)a b:(float)b;
-- (TuioCursor *)addTuioCursor:(float)x y:(float)y;
-- (TuioBlob *)addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
+- (TuioCursor *)tuioCursorAdd:(float)x y:(float)y;
+- (TuioBlob *)tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
 
-- (void)removeTuioCursor:(TuioCursor *)cursor;
-- (void)removeTuioBlob:(TuioBlob *)blob;
+- (void)tuioCursorDelete:(TuioCursor *)cursor;
+- (void)tuioBlobDelete:(TuioBlob *)blob;
 
-- (void)updateTuioCursor:(TuioCursor *)cursor x:(float)x y:(float)y;
-- (void)updateTuioBlob:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
+- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(float)x y:(float)y;
+- (void)tuioBlobUpdate:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
 
 - (void)stopUntouchedMovingCursors;
 - (void)stopUntouchedMovingBlobs;
@@ -44,5 +46,5 @@
 - (void)enablePeriodicMessages:(NSInteger) interval;
 - (void)disablePeriodicMessages;
 
+- (void)testing:(NSObject *)ob;
 @end
-

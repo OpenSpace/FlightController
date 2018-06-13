@@ -84,12 +84,14 @@ class TuioSender {
     private func updateCursor(cursor: TuioCursorInfo) {
         var (x, y, w, h, a) = cursor.getMeasurements()
         if (cursor.isNew()) {
-            tuioServer.addTuioCursor(x, b: y)
             // Add a new cursor
+            tuioServer.tuioCursorAdd(x, y: y)
         } else if (cursor.isReleased()) {
             // Remove the cursor
+            tuioServer.tuioCursorDelete(nil);
         } else if (cursor.isMoving()) {
             // Update the values
+            tuioServer.tuioCursorUpdate(nil, x: x, y: y)
         }
     }
     

@@ -13,7 +13,10 @@
 #import "TUIO/TuioTime.h"
 
 
-@implementation TuioServer
+@implementation TuioServer {
+    // MARK: Members
+    TUIO::TuioServer *obj_;
+}
 
 // MARK: Initializers
 - (id)init {
@@ -56,32 +59,27 @@
     obj_->initFrame( *((__bridge TUIO::TuioTime *) time) );
 }
 
-- (NSInteger)addTuioCursor:(float)a b:(float)b {
-    obj_->addTuioCursor(a, b);
-    return 1;
-}
-
-- (TuioCursor *)addTuioCursor:(float)x y:(float)y {
+- (TuioCursor *)tuioCursorAdd:(float)x y:(float)y {
     return (__bridge TuioCursor *) obj_->addTuioCursor(x, y);
 }
 
-- (TuioBlob * )addTuioBlob:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+- (TuioBlob * )tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
     return (__bridge TuioBlob *) obj_->addTuioBlob(x, y, a, w, h, f);
 }
 
-- (void)removeTuioCursor:(TuioCursor *)cursor {
+- (void)tuioCursorDelete:(TuioCursor *)cursor {
     obj_->removeTuioCursor((__bridge TUIO::TuioCursor *) cursor);
 }
 
-- (void)removeTuioBlob:(TuioBlob *)blob {
+- (void)tuioBlobDelete:(TuioBlob *)blob {
     obj_->removeTuioBlob((__bridge TUIO::TuioBlob *) blob);
 }
 
-- (void)updateTuioCursor:(TuioCursor *)cursor x:(float)x y:(float)y {
+- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(float)x y:(float)y {
     obj_->updateTuioCursor((__bridge TUIO::TuioCursor *) cursor, x, y);
 }
 
-- (void)updateTuioBlob:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+- (void)tuioBlobUpdate:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
     obj_->updateTuioBlob((__bridge TUIO::TuioBlob *) blob, x, y, a, w, h, f);
 }
 
@@ -118,7 +116,10 @@
     obj_->disablePeriodicMessages();
 }
 
-// MARK: Members
-TUIO::TuioServer *obj_;
-
+- (void)testing:(NSObject *)ob {
+    printf("%s\n", ob);
+    printf("%s\n", object_getClassName(ob));
+    printf("%s\n", [TuioCursor.description UTF8String]);
+    
+}
 @end

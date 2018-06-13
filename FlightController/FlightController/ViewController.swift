@@ -26,6 +26,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let b: TuioSender! = TuioSender(host: "192.168.84.185", port: 3333, tcp: 0, ip: "192.168.84.185", blobs: false)
+        let a = TuioCursor();
+        b.tuioServer.testing(a);
     }
 
     override func didReceiveMemoryWarning() {
