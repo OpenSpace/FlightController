@@ -8,5 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TuioCursor: NSObject
+@interface TuioCursor: NSObject {
+    @private
+    struct TuioCursorWrapper * obj_;
+}
+- (struct TuioCursorWrapper *)wrapper;
 @end

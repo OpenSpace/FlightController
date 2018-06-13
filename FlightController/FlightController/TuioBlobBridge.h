@@ -8,5 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TuioBlob: NSObject
+@interface TuioBlob: NSObject {
+    @private
+   struct TuioBlobWrapper * obj_;
+}
+
+- (struct TuioBlobWrapper *)wrapper;
 @end

@@ -8,21 +8,23 @@
 
 #import <Foundation/Foundation.h>
 #import "TuioBlobBridge.h"
+#import "TuioBlobWrapper.hpp"
 #import "TUIO/TuioBlob.h"
 
-@implementation TuioBlob {
-    // MARK: Members
-    TUIO::TuioBlob * obj_;
-}
+@implementation TuioBlob
 
 // MARK: Initializers
 - (id)init {
     self = [super init];
     if (self) {
         // init variables
-        obj_ = nil;
+        obj_ = new TuioBlobWrapper();
     }
     return self;
+}
+
+- (struct TuioBlobWrapper *)wrapper {
+    return obj_;
 }
 
 @end

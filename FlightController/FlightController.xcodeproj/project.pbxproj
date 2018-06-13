@@ -140,6 +140,8 @@
 		432329B820D0937A00EC4824 /* TuioCursorBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TuioCursorBridge.h; sourceTree = "<group>"; };
 		432329B920D0968A00EC4824 /* TuioBlobBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuioBlobBridge.h; sourceTree = "<group>"; };
 		432329BA20D0969D00EC4824 /* TuioBlobBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TuioBlobBridge.mm; sourceTree = "<group>"; };
+		432329BE20D1973F00EC4824 /* TuioCursorWrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TuioCursorWrapper.hpp; sourceTree = "<group>"; };
+		432329BF20D1987B00EC4824 /* TuioBlobWrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TuioBlobWrapper.hpp; sourceTree = "<group>"; };
 		435164A920B617CE00A88CBD /* FlightController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164AC20B617CE00A88CBD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		435164AE20B617CE00A88CBD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -275,8 +277,10 @@
 			children = (
 				432329B920D0968A00EC4824 /* TuioBlobBridge.h */,
 				432329BA20D0969D00EC4824 /* TuioBlobBridge.mm */,
+				432329BF20D1987B00EC4824 /* TuioBlobWrapper.hpp */,
 				432329B420D0932B00EC4824 /* TuioCursorBridge.mm */,
 				432329B820D0937A00EC4824 /* TuioCursorBridge.h */,
+				432329BE20D1973F00EC4824 /* TuioCursorWrapper.hpp */,
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
 				43E5568020CB0092006A2730 /* ext */,

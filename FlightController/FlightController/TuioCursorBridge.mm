@@ -8,21 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import "TuioCursorBridge.h"
-#import "TUIO/TuioCursor.h"
+#import "TuioCursorWrapper.hpp"
 
-@implementation TuioCursor {
-    // MARK: Members
-    TUIO::TuioCursor * obj_;
-}
+@implementation TuioCursor
 
 // MARK: Initializers
 - (id)init {
     self = [super init];
     if (self) {
         // init variables
-        obj_ = nil;
+        obj_ = new TuioCursorWrapper();
     }
     return self;
+}
+
+- (struct TuioCursorWrapper *)wrapper {
+    return obj_;
 }
 
 @end

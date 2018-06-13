@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "TuioServerBridge.h"
+#import "TuioCursorBridge.h"
+#import "TuioCursorWrapper.hpp"
+#import "TuioBlobBridge.h"
+#import "TuioBlobWrapper.hpp"
 #import "TUIO/TuioServer.h"
 #import "TUIO/TuioCursor.h"
 #import "TUIO/TuioTime.h"
@@ -60,27 +64,31 @@
 }
 
 - (TuioCursor *)tuioCursorAdd:(float)x y:(float)y {
-    return (__bridge TuioCursor *) obj_->addTuioCursor(x, y);
+    TuioCursor* ret;
+    ret.wrapper->cursor = obj_->addTuioCursor(x, y);
+    return ret;
 }
 
-- (TuioBlob * )tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
-    return (__bridge TuioBlob *) obj_->addTuioBlob(x, y, a, w, h, f);
+- (TuioBlob *)tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+    TuioBlob* ret;
+    ret.wrapper->blob = obj_->addTuioBlob(x, y, a, w, h, f);
+    return ret;
 }
 
 - (void)tuioCursorDelete:(TuioCursor *)cursor {
-    obj_->removeTuioCursor((__bridge TUIO::TuioCursor *) cursor);
+    obj_->removeTuioCursor(cursor.wrapper->cursor);
 }
 
 - (void)tuioBlobDelete:(TuioBlob *)blob {
-    obj_->removeTuioBlob((__bridge TUIO::TuioBlob *) blob);
+    obj_->removeTuioBlob(blob.wrapper->blob);
 }
 
 - (void)tuioCursorUpdate:(TuioCursor *)cursor x:(float)x y:(float)y {
-    obj_->updateTuioCursor((__bridge TUIO::TuioCursor *) cursor, x, y);
+    obj_->updateTuioCursor(cursor.wrapper->cursor, x, y);
 }
 
 - (void)tuioBlobUpdate:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
-    obj_->updateTuioBlob((__bridge TUIO::TuioBlob *) blob, x, y, a, w, h, f);
+    obj_->updateTuioBlob(blob.wrapper->blob, x, y, a, w, h, f);
 }
 
 - (void)stopUntouchedMovingCursors {
