@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import "TuioCursorBridge.h"
 #import "TuioBlobBridge.h"
 // MARK: Forward declarations
@@ -25,14 +26,14 @@
 - (void)initFrame;
 - (void)initFrame:(TuioTime *)time;
 
-- (TuioCursor *)tuioCursorAdd:(float)x y:(float)y;
-- (TuioBlob *)tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
+- (TuioCursor *)tuioCursorAdd:(CGFloat)x y:(CGFloat)y;
+- (TuioBlob *)tuioBlobAdd:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f;
 
 - (void)tuioCursorDelete:(TuioCursor *)cursor;
 - (void)tuioBlobDelete:(TuioBlob *)blob;
 
-- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(float)x y:(float)y;
-- (void)tuioBlobUpdate:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f;
+- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(CGFloat)x y:(CGFloat)y;
+- (void)tuioBlobUpdate:(TuioBlob *)blob x:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f;
 
 - (void)stopUntouchedMovingCursors;
 - (void)stopUntouchedMovingBlobs;

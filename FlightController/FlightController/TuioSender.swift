@@ -6,21 +6,23 @@
 //  Copyright © 2018 OpenSpace. All rights reserved.
 //
 
+import CoreGraphics
+
 struct TuioCursorInfo {
 
     var obj: TuioCursor!
 
-    var x: Float = 0.0
-    var y: Float = 0.0
-    var w: Float = 0.0
-    var h: Float = 0.0
-    var a: Float = 0.0
+    var x: CGFloat = 0.0
+    var y: CGFloat = 0.0
+    var w: CGFloat = 0.0
+    var h: CGFloat = 0.0
+    var a: CGFloat = 0.0
     
     var isAlive : Bool = false  // is it alive this frame
     var wasAlive: Bool = false  // was it alive this frame
     var moved   : Bool = false  // did it move this frame
     
-    mutating func setMeasurements(x: Float, y: Float, w: Float, h: Float, a: Float) {
+    mutating func setMeasurements(x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         self.x = x
         self.y = y
         self.w = w
@@ -28,7 +30,7 @@ struct TuioCursorInfo {
         self.a = a
     }
     
-    func getMeasurements() -> (Float, Float, Float, Float, Float) {
+    func getMeasurements() -> (CGFloat, CGFloat, CGFloat, CGFloat, CGFloat) {
         return (x, y, w, h, a)
     }
     
@@ -102,20 +104,19 @@ class TuioSender {
         tuioServer = nil
     }
     
-    func touchPressed(touchId: Int, x: Float, y: Float, w: Float, h: Float, a: Float) {
+    func touchPressed(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = true
     }
     
-    func touchDragged(touchId: Int, x: Float, y: Float, w: Float, h: Float, a: Float) {
+    func touchDragged(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = true
         cursors[touchId].wasAlive = true
     }
     
-    func touchReleased(touchId: Int, x: Float, y: Float, w: Float, h: Float, a: Float) {
+    func touchReleased(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = false
     }
-    
 } // TuioSender

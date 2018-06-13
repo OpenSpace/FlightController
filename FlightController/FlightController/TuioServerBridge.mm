@@ -63,13 +63,13 @@
     obj_->initFrame( *((__bridge TUIO::TuioTime *) time) );
 }
 
-- (TuioCursor *)tuioCursorAdd:(float)x y:(float)y {
+- (TuioCursor *)tuioCursorAdd:(CGFloat)x y:(CGFloat)y {
     TuioCursor* ret;
     ret.wrapper->cursor = obj_->addTuioCursor(x, y);
     return ret;
 }
 
-- (TuioBlob *)tuioBlobAdd:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+- (TuioBlob *)tuioBlobAdd:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f {
     TuioBlob* ret;
     ret.wrapper->blob = obj_->addTuioBlob(x, y, a, w, h, f);
     return ret;
@@ -83,11 +83,11 @@
     obj_->removeTuioBlob(blob.wrapper->blob);
 }
 
-- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(float)x y:(float)y {
+- (void)tuioCursorUpdate:(TuioCursor *)cursor x:(CGFloat)x y:(CGFloat)y {
     obj_->updateTuioCursor(cursor.wrapper->cursor, x, y);
 }
 
-- (void)tuioBlobUpdate:(TuioBlob *)blob x:(float)x y:(float)y a:(float)a w:(float)w h:(float)h f:(float)f {
+- (void)tuioBlobUpdate:(TuioBlob *)blob x:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f {
     obj_->updateTuioBlob(blob.wrapper->blob, x, y, a, w, h, f);
 }
 
