@@ -11,7 +11,6 @@ import CoreMotion
 import simd
 
 class ViewController: UIViewController {
-
     @IBOutlet weak var accel_x: UILabel!
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
@@ -22,12 +21,11 @@ class ViewController: UIViewController {
 
     var motionManager: CMMotionManager?
 
+    lazy var tuio: TuioSender = TuioSender.shared
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let b: TuioSender! = TuioSender(host: "192.168.84.185", port: 3333, tcp: 0, ip: "192.168.84.185", blobs: false)
-        let a = TuioCursor();
-        b.tuioServer.testing(a);
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,6 +74,5 @@ class ViewController: UIViewController {
         gyro_y.text = String(format: "Y: %+6.4f", gravity[1])
         gyro_z.text = String(format: "Z: %+6.4f", gravity[2])
     }
-
 }
 

@@ -17,24 +17,37 @@ class TuioGestureRecognizer: UIGestureRecognizer {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         let t = touches.first
+
         let loc = t?.location(in: nil)
-        tuio.touchPressed(touchId: 1, x: loc!.x, y: loc!.y, w: 0, h: 0, a: 0)
+        let x = loc!.x/self.view!.window!.frame.width
+        let y = loc!.y/self.view!.window!.frame.height
+
+        tuio.touchPressed(touchId: 1, x: x, y: y, w: 0, h: 0, a: 0)
+        print("Just tap it in \(x), \(y)")
         tuio.update()
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         let t = touches.first
+
         let loc = t?.location(in: nil)
-        tuio.touchDragged(touchId: 1, x: loc!.x, y: loc!.y, w: 0, h: 0, a: 0)
-        print("Taaaaap it in \(loc!.x), \(loc!.y)")
+        let x = loc!.x/self.view!.window!.frame.width
+        let y = loc!.y/self.view!.window!.frame.height
+
+        tuio.touchDragged(touchId: 1, x: x, y: y, w: 0, h: 0, a: 0)
+        print("Taaaaap it in \(x), \(y)")
         tuio.update()
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         let t = touches.first
+
         let loc = t?.location(in: nil)
-        tuio.touchReleased(touchId: 1, x: loc!.x, y: loc!.y, w: 0, h: 0, a: 0)
-        print("Tap tap tapparoo! \(loc!.x), \(loc!.y)")
+        let x = loc!.x/self.view!.window!.frame.width
+        let y = loc!.y/self.view!.window!.frame.height
+
+        tuio.touchReleased(touchId: 1, x: x, y: y, w: 0, h: 0, a: 0)
+        print("Tap tap tapparoo! \(x), \(y)")
         tuio.update()
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {

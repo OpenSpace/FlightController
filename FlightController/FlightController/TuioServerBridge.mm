@@ -64,13 +64,13 @@
 }
 
 - (TuioCursor *)tuioCursorAdd:(CGFloat)x y:(CGFloat)y {
-    TuioCursor * ret = [TuioCursor alloc];
+    TuioCursor * ret = [[TuioCursor alloc] init];
     ret.wrapper->cursor = obj_->addTuioCursor(x, y);
     return ret;
 }
 
 - (TuioBlob *)tuioBlobAdd:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f {
-    TuioBlob * ret = [TuioBlob alloc];
+    TuioBlob * ret = [[TuioBlob alloc] init];
     ret.wrapper->blob = obj_->addTuioBlob(x, y, a, w, h, f);
     return ret;
 }

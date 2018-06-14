@@ -50,7 +50,8 @@ struct TuioCursorInfo {
 }
 
 final class TuioSender {
-    static let shared = TuioSender(host: "192.168.84.185", port: 3333, tcp: 0, ip: "192.168.84.185", blobs: false)
+    static let defaultHost = "127.0.0.1"
+    static let shared = TuioSender(host: defaultHost, port: 3333, tcp: 0, ip: defaultHost, blobs: false)
 
     static var MAX_TOUCHES = 10
     
@@ -80,7 +81,8 @@ final class TuioSender {
         tuioServer.initFrame()
         
         // TODO: Handle Cursors
-        for i in 0...TuioSender.MAX_TOUCHES - 1 {
+        //for i in 0...TuioSender.MAX_TOUCHES - 1 {
+        for i in 0...1 {
             updateCursor(cursor: &cursors[i])
         }
         
@@ -99,8 +101,10 @@ final class TuioSender {
             cursor.reset()
         } else if (cursor.isMoving()) {
             // Update the values
+            cursor.moved = false
             tuioServer.tuioCursorUpdate(cursor.obj, x: x, y: y)
         }
+        cursor.wasAlive = cursor.isAlive
     }
     
     func close() {
