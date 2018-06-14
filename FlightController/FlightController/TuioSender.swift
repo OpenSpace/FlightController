@@ -119,7 +119,7 @@ final class TuioSender {
     func touchDragged(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = true
-        cursors[touchId].wasAlive = true
+        cursors[touchId].moved = true
     }
     
     func touchReleased(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
