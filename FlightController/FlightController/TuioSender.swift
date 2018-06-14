@@ -23,11 +23,7 @@ struct TuioCursorInfo {
     var moved   : Bool = false  // did it move this frame
     
     mutating func setMeasurements(x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.a = a
+        (self.x, self.y, self.w, self.h, self.a) = (x, y, w, h, a)
     }
     
     func getMeasurements() -> (CGFloat, CGFloat, CGFloat, CGFloat, CGFloat) {
@@ -35,7 +31,7 @@ struct TuioCursorInfo {
     }
     
     func isNew() -> Bool {
-        return isAlive && !wasAlive
+        return (isAlive && !wasAlive) || obj == nil
     }
     
     func isMoving() -> Bool {
@@ -45,20 +41,27 @@ struct TuioCursorInfo {
     func isReleased() -> Bool {
         return wasAlive && !isAlive
     }
+
+    mutating func reset() {
+        obj = nil
+        (isAlive, wasAlive, moved) = (false, false, false)
+        setMeasurements(x: 0, y: 0, w: 0, h: 0, a: 0)
+    }
 }
 
-class TuioSender {
-    
+final class TuioSender {
+    static let shared = TuioSender(host: "192.168.84.185", port: 3333, tcp: 0, ip: "192.168.84.185", blobs: false)
+
     static var MAX_TOUCHES = 10
     
     var tuioServer: TuioServer!
     var cursors = Array<TuioCursorInfo>(repeating: TuioCursorInfo(), count: MAX_TOUCHES)
     
-    init() {
+    private init() {
         tuioServer = TuioServer()
     }
     
-    init(host: String, port: Int, tcp: Int, ip: String, blobs: Bool) {
+    private init(host: String, port: Int, tcp: Int, ip: String, blobs: Bool) {
         if (setup(host: host, port: port, tcp: tcp, ip: ip, blobs: blobs)) {
             print("TuioSender initialized")
         }
@@ -77,7 +80,7 @@ class TuioSender {
         tuioServer.initFrame()
         
         // TODO: Handle Cursors
-        for i in 1...TuioSender.MAX_TOUCHES {
+        for i in 0...TuioSender.MAX_TOUCHES - 1 {
             updateCursor(cursor: &cursors[i])
         }
         
@@ -86,14 +89,14 @@ class TuioSender {
     }
     
     private func updateCursor(cursor: inout TuioCursorInfo) {
-        var (x, y, w, h, a) = cursor.getMeasurements()
+        let (x, y, _, _, _) = cursor.getMeasurements()
         if (cursor.isNew()) {
             // Add a new cursor
             cursor.obj = tuioServer.tuioCursorAdd(x, y: y)
         } else if (cursor.isReleased()) {
             // Remove the cursor
             tuioServer.tuioCursorDelete(cursor.obj);
-            cursor.obj = nil
+            cursor.reset()
         } else if (cursor.isMoving()) {
             // Update the values
             tuioServer.tuioCursorUpdate(cursor.obj, x: x, y: y)

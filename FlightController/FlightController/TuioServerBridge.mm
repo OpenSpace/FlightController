@@ -64,13 +64,13 @@
 }
 
 - (TuioCursor *)tuioCursorAdd:(CGFloat)x y:(CGFloat)y {
-    TuioCursor* ret;
+    TuioCursor * ret = [TuioCursor alloc];
     ret.wrapper->cursor = obj_->addTuioCursor(x, y);
     return ret;
 }
 
 - (TuioBlob *)tuioBlobAdd:(CGFloat)x y:(CGFloat)y a:(CGFloat)a w:(CGFloat)w h:(CGFloat)h f:(CGFloat)f {
-    TuioBlob* ret;
+    TuioBlob * ret = [TuioBlob alloc];
     ret.wrapper->blob = obj_->addTuioBlob(x, y, a, w, h, f);
     return ret;
 }
@@ -125,7 +125,6 @@
 }
 
 - (void)testing:(NSObject *)ob {
-    printf("%s\n", ob);
     printf("%s\n", object_getClassName(ob));
     printf("%s\n", [TuioCursor.description UTF8String]);
     

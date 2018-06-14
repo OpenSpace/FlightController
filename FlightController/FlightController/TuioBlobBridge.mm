@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "TuioBlobBridge.h"
 #import "TuioBlobWrapper.hpp"
-#import "TUIO/TuioBlob.h"
 
 @implementation TuioBlob
 
