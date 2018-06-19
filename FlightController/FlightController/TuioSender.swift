@@ -7,6 +7,7 @@
 //
 
 import CoreGraphics
+import simd
 
 struct TuioCursorInfo {
 
@@ -110,7 +111,8 @@ final class TuioSender {
     func close() {
         tuioServer = nil
     }
-    
+
+    // MARK: Touch handlers
     func touchPressed(touchId: Int, x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat, a: CGFloat) {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = true
@@ -126,4 +128,10 @@ final class TuioSender {
         cursors[touchId].setMeasurements(x: x, y: y, w: w, h: h, a: a)
         cursors[touchId].isAlive = false
     }
+
+    // MARK: Accelerometer Handlers
+    func tilted(attitude: double3) {
+        //cursors[0].setMeasurements(x: 0, y:0 , w:0 , h:0 , a: 0)
+    }
+
 } // TuioSender

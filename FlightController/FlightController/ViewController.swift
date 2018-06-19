@@ -48,6 +48,7 @@ class ViewController: UIViewController {
             setValueLabels(rollPitchYaw: [-1,-1,-1])
             return
         }
+        let referenceAttitude = motionManager.deviceMotion?.attitude
         motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
             guard let deviceMotion = deviceMotion else { return }
             let attitude = double3([deviceMotion.attitude.roll, deviceMotion.attitude.pitch, deviceMotion.attitude.yaw])
