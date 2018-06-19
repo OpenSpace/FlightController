@@ -25,7 +25,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let a: TuioServer! = TuioServer.init(host: "192.168.84.100", port: 3333)
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,6 +53,18 @@ class ViewController: UIViewController {
             let gravity = double3([deviceMotion.gravity.x, deviceMotion.gravity.y, deviceMotion.gravity.z])
             self.setValueLabels(rollPitchYaw: attitude)
             self.setValueLabels(gravity: gravity)
+
+
+            if(attitude.x < 0.4 && attitude.x > 0.0) {
+                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .light)
+                impactGenerator.impactOccurred()
+            } else if (attitude.x < 0.7 && attitude.x > 0.0) {
+                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .medium)
+                    impactGenerator.impactOccurred()
+            } else if (attitude.x > 0.7) {
+                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .heavy)
+                    impactGenerator.impactOccurred()
+            }
         }
     }
 
