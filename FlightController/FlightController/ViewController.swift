@@ -21,6 +21,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var gyro_z: UILabel!
 
     var motionManager: CMMotionManager?
+    var referenceAttitude: CMAttitude! = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,24 +48,36 @@ class ViewController: UIViewController {
             setValueLabels(rollPitchYaw: [-1,-1,-1])
             return
         }
+
         motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
             guard let deviceMotion = deviceMotion else { return }
-            let attitude = double3([deviceMotion.attitude.roll, deviceMotion.attitude.pitch, deviceMotion.attitude.yaw])
+
+            let cur = deviceMotion.attitude
+            if (self.referenceAttitude == nil) {
+                self.referenceAttitude = cur.copy() as! CMAttitude
+            }
+
+
+            print(self.referenceAttitude!)
+            cur.multiply(byInverseOf: self.referenceAttitude)
+
+            let attitude = double3([cur.roll, cur.pitch, cur.yaw])
             let gravity = double3([deviceMotion.gravity.x, deviceMotion.gravity.y, deviceMotion.gravity.z])
+
             self.setValueLabels(rollPitchYaw: attitude)
             self.setValueLabels(gravity: gravity)
 
 
-            if(attitude.x < 0.4 && attitude.x > 0.0) {
-                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .light)
-                impactGenerator.impactOccurred()
-            } else if (attitude.x < 0.7 && attitude.x > 0.0) {
-                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .medium)
-                    impactGenerator.impactOccurred()
-            } else if (attitude.x > 0.7) {
-                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .heavy)
-                    impactGenerator.impactOccurred()
-            }
+    //            if(attitude.x < 0.4 && attitude.x > 0.0) {
+    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .light)
+    //                impactGenerator.impactOccurred()
+    //            } else if (attitude.x < 0.7 && attitude.x > 0.0) {
+    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .medium)
+    //                    impactGenerator.impactOccurred()
+    //            } else if (attitude.x > 0.7) {
+    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .heavy)
+    //                    impactGenerator.impactOccurred()
+    //            }
         }
     }
 
@@ -72,6 +85,7 @@ class ViewController: UIViewController {
         guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
 
         motionManager.stopDeviceMotionUpdates()
+        self.referenceAttitude = nil
     }
 
     func setValueLabels(rollPitchYaw: double3) {
