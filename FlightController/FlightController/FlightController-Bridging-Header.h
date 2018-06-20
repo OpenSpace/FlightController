@@ -3,3 +3,5 @@
 //
 
 #import "TuioServerBridge.h"
+#import "TuioCursorBridge.h"
+#import "TuioBlobBridge.h"

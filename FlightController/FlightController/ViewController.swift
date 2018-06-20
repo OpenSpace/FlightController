@@ -11,7 +11,6 @@ import CoreMotion
 import simd
 
 class ViewController: UIViewController {
-
     @IBOutlet weak var accel_x: UILabel!
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
@@ -22,6 +21,8 @@ class ViewController: UIViewController {
 
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude! = nil
+
+    lazy var tuio: TuioSender = TuioSender.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +49,6 @@ class ViewController: UIViewController {
             setValueLabels(rollPitchYaw: [-1,-1,-1])
             return
         }
-
         motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
             guard let deviceMotion = deviceMotion else { return }
 
@@ -100,6 +100,5 @@ class ViewController: UIViewController {
         gyro_y.text = String(format: "Y: %+6.4f", gravity[1])
         gyro_z.text = String(format: "Z: %+6.4f", gravity[2])
     }
-
 }
 
