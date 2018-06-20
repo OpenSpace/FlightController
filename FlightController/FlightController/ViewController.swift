@@ -39,8 +39,8 @@ class ViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         stopUpdates()
+        super.viewWillDisappear(animated)
     }
 
     func startUpdates() {
@@ -53,12 +53,12 @@ class ViewController: UIViewController {
             guard let deviceMotion = deviceMotion else { return }
 
             let cur = deviceMotion.attitude
+
+            // Store the reference attitude when motion mode is engaged
             if (self.referenceAttitude == nil) {
                 self.referenceAttitude = cur.copy() as! CMAttitude
             }
 
-
-            print(self.referenceAttitude!)
             cur.multiply(byInverseOf: self.referenceAttitude)
 
             let attitude = double3([cur.roll, cur.pitch, cur.yaw])
@@ -84,6 +84,7 @@ class ViewController: UIViewController {
     func stopUpdates() {
         guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
 
+        // Release the reference attitude when motion disengaged
         motionManager.stopDeviceMotionUpdates()
         self.referenceAttitude = nil
     }
