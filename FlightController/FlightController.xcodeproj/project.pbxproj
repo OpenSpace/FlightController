@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		431E5B9820F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
+		431E5B9920F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
+		431E5B9A20F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
+		431E5C4220F883CF008715AD /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 431E5C3D20F87F7A008715AD /* Starscream.framework */; };
+		431E5C4420F883F3008715AD /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 431E5C3D20F87F7A008715AD /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		432329B520D0932B00EC4824 /* TuioCursorBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 432329B420D0932B00EC4824 /* TuioCursorBridge.mm */; };
 		432329B620D0932B00EC4824 /* TuioCursorBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 432329B420D0932B00EC4824 /* TuioCursorBridge.mm */; };
 		432329B720D0932B00EC4824 /* TuioCursorBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 432329B420D0932B00EC4824 /* TuioCursorBridge.mm */; };
@@ -122,6 +127,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		431E5C3C20F87F7A008715AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 431E5C3720F87F7A008715AD /* Starscream.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 33CCF0921F5DDC030099B092;
+			remoteInfo = Starscream;
+		};
+		431E5C3E20F87F7A008715AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 431E5C3720F87F7A008715AD /* Starscream.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 335FA2021F5DF71D00F6D2EC;
+			remoteInfo = "Starscream Tests";
+		};
 		435164BE20B617CF00A88CBD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 435164A120B617CD00A88CBD /* Project object */;
@@ -138,7 +157,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		431E5C4320F883D8008715AD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				431E5C4420F883F3008715AD /* Starscream.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		431E5B9720F87BED008715AD /* WebsocketSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSender.swift; sourceTree = "<group>"; };
+		431E5C3720F87F7A008715AD /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = Starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		432329B420D0932B00EC4824 /* TuioCursorBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TuioCursorBridge.mm; sourceTree = "<group>"; };
 		432329B820D0937A00EC4824 /* TuioCursorBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TuioCursorBridge.h; sourceTree = "<group>"; };
 		432329B920D0968A00EC4824 /* TuioBlobBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuioBlobBridge.h; sourceTree = "<group>"; };
@@ -236,6 +270,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				431E5C4220F883CF008715AD /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +291,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		431E5C3820F87F7A008715AD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				431E5C3D20F87F7A008715AD /* Starscream.framework */,
+				431E5C3F20F87F7A008715AD /* Starscream Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		431E5C4020F880D2008715AD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		435164A020B617CD00A88CBD = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +314,7 @@
 				435164C020B617CF00A88CBD /* FlightControllerTests */,
 				435164CB20B617CF00A88CBD /* FlightControllerUITests */,
 				435164AA20B617CE00A88CBD /* Products */,
+				431E5C4020F880D2008715AD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -295,6 +347,7 @@
 				432329B420D0932B00EC4824 /* TuioCursorBridge.mm */,
 				432329BE20D1973F00EC4824 /* TuioCursorWrapper.hpp */,
 				432329C020D1C6C800EC4824 /* TuioGestureRecognizer.swift */,
+				431E5B9720F87BED008715AD /* WebsocketSender.swift */,
 				43D2237720D05F560008A36D /* TuioSender.swift */,
 				43E5579720CB0699006A2730 /* TuioServerBridge.h */,
 				43E5579A20CB06B2006A2730 /* TuioServerBridge.mm */,
@@ -324,6 +377,7 @@
 		43E5568020CB0092006A2730 /* ext */ = {
 			isa = PBXGroup;
 			children = (
+				431E5C3720F87F7A008715AD /* Starscream.xcodeproj */,
 				43E5579F20CB0FC1006A2730 /* oscpack */,
 				43E557BE20CB0FC1006A2730 /* TUIO */,
 			);
@@ -444,6 +498,7 @@
 				435164A520B617CE00A88CBD /* Sources */,
 				435164A620B617CE00A88CBD /* Frameworks */,
 				435164A720B617CE00A88CBD /* Resources */,
+				431E5C4320F883D8008715AD /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -527,6 +582,12 @@
 			mainGroup = 435164A020B617CD00A88CBD;
 			productRefGroup = 435164AA20B617CE00A88CBD /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 431E5C3820F87F7A008715AD /* Products */;
+					ProjectRef = 431E5C3720F87F7A008715AD /* Starscream.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				435164A820B617CE00A88CBD /* FlightController */,
@@ -535,6 +596,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		431E5C3D20F87F7A008715AD /* Starscream.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Starscream.framework;
+			remoteRef = 431E5C3C20F87F7A008715AD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		431E5C3F20F87F7A008715AD /* Starscream Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Starscream Tests.xctest";
+			remoteRef = 431E5C3E20F87F7A008715AD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		435164A720B617CE00A88CBD /* Resources */ = {
@@ -605,6 +683,7 @@
 				43E5583E20CB0FC1006A2730 /* UdpReceiver.cpp in Sources */,
 				43E557EA20CB0FC1006A2730 /* IpEndpointName.cpp in Sources */,
 				43E557F020CB0FC1006A2730 /* UdpSocket.cpp in Sources */,
+				431E5B9820F87BED008715AD /* WebsocketSender.swift in Sources */,
 				43E5581720CB0FC1006A2730 /* OscReceiver.cpp in Sources */,
 				43E557FC20CB0FC1006A2730 /* OscOutboundPacketStream.cpp in Sources */,
 				43E5581A20CB0FC1006A2730 /* TcpReceiver.cpp in Sources */,
@@ -646,6 +725,7 @@
 				43E5582120CB0FC1006A2730 /* TuioBlob.cpp in Sources */,
 				43E557F120CB0FC1006A2730 /* UdpSocket.cpp in Sources */,
 				43E5583C20CB0FC1006A2730 /* TuioTime.cpp in Sources */,
+				431E5B9920F87BED008715AD /* WebsocketSender.swift in Sources */,
 				43E5580020CB0FC1006A2730 /* OscPrintReceivedElements.cpp in Sources */,
 				43E5583620CB0FC1006A2730 /* TuioPoint.cpp in Sources */,
 				43E557FD20CB0FC1006A2730 /* OscOutboundPacketStream.cpp in Sources */,
@@ -684,6 +764,7 @@
 				43E5582220CB0FC1006A2730 /* TuioBlob.cpp in Sources */,
 				43E557F220CB0FC1006A2730 /* UdpSocket.cpp in Sources */,
 				43E5583D20CB0FC1006A2730 /* TuioTime.cpp in Sources */,
+				431E5B9A20F87BED008715AD /* WebsocketSender.swift in Sources */,
 				43E5580120CB0FC1006A2730 /* OscPrintReceivedElements.cpp in Sources */,
 				43E5583720CB0FC1006A2730 /* TuioPoint.cpp in Sources */,
 				43E557FE20CB0FC1006A2730 /* OscOutboundPacketStream.cpp in Sources */,
@@ -850,7 +931,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 955888J573;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/FlightController/ext/TUIO11_CPP/**";
 				INFOPLIST_FILE = FlightController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -871,7 +952,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 955888J573;
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/FlightController/ext/TUIO11_CPP/**";
 				INFOPLIST_FILE = FlightController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
