@@ -92,16 +92,10 @@ class ViewController: UIViewController, WebSocketDelegate {
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
 
-    @IBOutlet weak var gyro_x: UILabel!
-    @IBOutlet weak var gyro_y: UILabel!
-    @IBOutlet weak var gyro_z: UILabel!
-
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude! = nil
 
-    lazy var tuio: TuioSender = TuioSender.shared
-
-    lazy var socket: WebSocket = WebSocket(url: URL(string: "ws://192.168.84.185:8001")!)
+    lazy var socket: WebSocket = WebSocket(url: URL(string: "ws://192.168.146.231:8001")!)
 
     let encoder = JSONEncoder()
 
@@ -148,36 +142,21 @@ class ViewController: UIViewController, WebSocketDelegate {
             cur.multiply(byInverseOf: self.referenceAttitude)
 
             let attitude = double3([cur.roll, cur.pitch, cur.yaw])
-            let gravity = double3([deviceMotion.gravity.x, deviceMotion.gravity.y, deviceMotion.gravity.z])
 
             self.setValueLabels(rollPitchYaw: attitude)
-            self.setValueLabels(gravity: gravity)
 
             // Websocket payload
             var payload = NavigationSocketPayload(
                 orbitX: attitude.y
                 , globalRollX: attitude.z
-                , zoomIn: attitude.x)
+                , zoomOut: attitude.x)
             payload.threshold(t: 0.35)
-            payload.remap(low: -0.02, high: 0.02)
+            payload.remap(low: -0.06, high: 0.06)
             guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
                 return
             }
             //print(String(data: data, encoding: .utf8)!)
             self.socket.write(string: String(data: data, encoding: .utf8)!)
-
-
-
-    //            if(attitude.x < 0.4 && attitude.x > 0.0) {
-    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .light)
-    //                impactGenerator.impactOccurred()
-    //            } else if (attitude.x < 0.7 && attitude.x > 0.0) {
-    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .medium)
-    //                    impactGenerator.impactOccurred()
-    //            } else if (attitude.x > 0.7) {
-    //                let impactGenerator: UIImpactFeedbackGenerator! = UIImpactFeedbackGenerator(style: .heavy)
-    //                    impactGenerator.impactOccurred()
-    //            }
         }
     }
 
@@ -193,12 +172,6 @@ class ViewController: UIViewController, WebSocketDelegate {
         accel_x.text = String(format: "Roll: %+6.4f", rollPitchYaw[0])
         accel_y.text = String(format: "Pitch: %+6.4f", rollPitchYaw[1])
         accel_z.text = String(format: "Yaw: %+6.4f", rollPitchYaw[2])
-    }
-
-    func setValueLabels(gravity: double3) {
-        gyro_x.text = String(format: "X: %+6.4f", gravity[0])
-        gyro_y.text = String(format: "Y: %+6.4f", gravity[1])
-        gyro_z.text = String(format: "Z: %+6.4f", gravity[2])
     }
 
     // Mark: Starscream WebSocketDelegate
