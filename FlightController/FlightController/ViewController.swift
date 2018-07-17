@@ -19,6 +19,7 @@ struct NavigationSocket: Codable {
 }
 
 struct NavigationSocketPayload: Codable {
+    var type: String = "inputState"
     var orbitX: Double? = nil
     var orbitY: Double? = nil
     var panX: Double? = nil
@@ -46,6 +47,10 @@ struct NavigationSocketPayload: Codable {
         self.localRollY = localRollY
         self.zoomIn = zoomIn
         self.zoomOut = zoomOut
+    }
+
+    init(type: String) {
+        self.type = type
     }
 
     mutating func threshold(t: Double) {
@@ -85,17 +90,33 @@ struct NavigationSocketPayload: Codable {
         if zoomIn != nil && zoomIn! < 0 { zoomIn = low}
         if zoomOut != nil && zoomOut! < 0 { zoomOut = low}
     }
+
+    func isEmpty() -> Bool {
+        return (
+            (orbitX == nil || orbitX!.isZero)
+            && (orbitY == nil || orbitY!.isZero)
+            && (panX == nil || panX!.isZero)
+            && (panY == nil || panY!.isZero)
+            && (globalRollX == nil || globalRollX!.isZero)
+            && (globalRollY == nil || globalRollY!.isZero)
+            && (localRollX == nil || localRollX!.isZero)
+            && (localRollY == nil || localRollY!.isZero)
+            && (zoomIn == nil || zoomIn!.isZero)
+            && (zoomOut == nil || zoomOut!.isZero)
+        )
+    }
 }
 
 class ViewController: UIViewController, WebSocketDelegate {
     @IBOutlet weak var accel_x: UILabel!
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
+    @IBOutlet weak var socketHost: UITextField!
 
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude! = nil
 
-    lazy var socket: WebSocket = WebSocket(url: URL(string: "ws://192.168.146.231:8001")!)
+    var _socket: WebSocket?
 
     let encoder = JSONEncoder()
 
@@ -103,7 +124,6 @@ class ViewController: UIViewController, WebSocketDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         encoder.outputFormatting = .sortedKeys
-        socket.connect()
     }
 
     override func didReceiveMemoryWarning() {
@@ -113,14 +133,42 @@ class ViewController: UIViewController, WebSocketDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        socket.connect()
         startUpdates()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         stopUpdates()
-        socket.disconnect()
         super.viewWillDisappear(animated)
+    }
+
+
+    @IBAction
+    func connectSocket() {
+        let host = (socketHost.text ?? "").isEmpty ? socketHost.placeholder : socketHost.text
+
+        _socket = WebSocket(url: URL(string: "ws://\(host!):8001")!)
+        guard let socket = _socket else {return}
+        socket.connect()
+
+        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
+            payload: NavigationSocketPayload(type: "connect"))) else {
+            return
+        }
+
+        socket.write(string: String(data: data, encoding: .utf8)!)
+    }
+
+    @IBAction
+    func disconnectSocket() {
+        guard let socket = _socket else {return}
+        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
+            payload: NavigationSocketPayload(type: "disconnect"))) else {
+            return
+        }
+
+        socket.write(string: String(data: data, encoding: .utf8)!)
+
+        socket.disconnect()
     }
 
     func startUpdates() {
@@ -145,18 +193,24 @@ class ViewController: UIViewController, WebSocketDelegate {
 
             self.setValueLabels(rollPitchYaw: attitude)
 
-            // Websocket payload
-            var payload = NavigationSocketPayload(
-                orbitX: attitude.y
-                , globalRollX: attitude.z
-                , zoomOut: attitude.x)
-            payload.threshold(t: 0.35)
-            payload.remap(low: -0.06, high: 0.06)
-            guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
-                return
+            guard let socket = self._socket else {return}
+            if socket.isConnected {
+                // Websocket payload
+                var payload = NavigationSocketPayload(
+                    orbitX: attitude.y
+                    , globalRollX: attitude.z
+                    , zoomOut: attitude.x)
+                payload.threshold(t: 0.35)
+
+                if(!payload.isEmpty()) {
+                    payload.remap(low: -0.06, high: 0.06)
+                    guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
+                        return
+                    }
+
+                    socket.write(string: String(data: data, encoding: .utf8)!)
+                }
             }
-            //print(String(data: data, encoding: .utf8)!)
-            self.socket.write(string: String(data: data, encoding: .utf8)!)
         }
     }
 
