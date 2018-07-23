@@ -94,22 +94,32 @@ class JoystickView: UIView {
         touchData.removeAll()
     }
 
-    func processLeftStick(touch: JoystickTouch) {
-        print("Left!")
+
+    func sendData(touch: JoystickTouch, type: String) {
         guard let socket = socketManager.socket else { return }
 
         if socket.isConnected {
             let distance = touch.distance()
 
-            let r = touch.remap(value: distance)
+            //let r = touch.remap(value: distance)
+            let r = distance
             let dx = Double(r.x)
             let dy = Double(r.y)
 
-            // Websocket payload
-            var payload = NavigationSocketPayload(
-                orbitX: dx
-                , zoomOut: dy
-            )
+            var payload = NavigationSocketPayload()
+
+            switch type {
+            case "left":
+                payload.orbitX = dx
+                payload.zoomOut = dy
+                break
+            case "right":
+                payload.panX = dx
+                payload.panY = dy
+                break
+            default:
+                break
+            }
             //payload.threshold(t: 0.005)
 
             if(!payload.isEmpty()) {
@@ -117,28 +127,14 @@ class JoystickView: UIView {
                 socketManager.write(data: NavigationSocket(topic:1, payload: payload))
             }
         }
+
+    }
+
+    func processLeftStick(touch: JoystickTouch) {
+        sendData(touch: touch, type: "left")
     }
 
     func processRightStick(touch: JoystickTouch) {
-        print("Right...")
-        guard let socket = socketManager.socket else { return }
-
-        if socket.isConnected {
-            let distance = touch.distance()
-            let dx = Double(distance.x)
-            let dy = Double(distance.y)
-            // Websocket payload
-            var payload = NavigationSocketPayload(
-                panX: dx
-                , panY: dy
-            )
-            //payload.threshold(t: 0.005)
-
-            if(!payload.isEmpty()) {
-                //payload.remap(low: -0.07, high: 0.07)
-                socketManager.write(data: NavigationSocket(topic:1, payload: payload))
-            }
-        }
-
+        sendData(touch: touch, type: "right")
     }
 }
