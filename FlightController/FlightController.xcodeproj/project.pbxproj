@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		431E5B9820F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
-		431E5B9920F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
-		431E5B9A20F87BED008715AD /* WebsocketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketSender.swift */; };
+		431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketManager.swift */; };
+		431E5B9920F87BED008715AD /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketManager.swift */; };
+		431E5B9A20F87BED008715AD /* WebsocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431E5B9720F87BED008715AD /* WebsocketManager.swift */; };
 		431E5C4220F883CF008715AD /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 431E5C3D20F87F7A008715AD /* Starscream.framework */; };
 		431E5C4420F883F3008715AD /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 431E5C3D20F87F7A008715AD /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AC20B617CE00A88CBD /* AppDelegate.swift */; };
@@ -19,6 +19,9 @@
 		435164B720B617CF00A88CBD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 435164B520B617CF00A88CBD /* LaunchScreen.storyboard */; };
 		435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164C120B617CF00A88CBD /* FlightControllerTests.swift */; };
 		435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164CC20B617CF00A88CBD /* FlightControllerUITests.swift */; };
+		439A2055210163C9002E3CC4 /* JoystickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickView.swift */; };
+		439A2056210163C9002E3CC4 /* JoystickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickView.swift */; };
+		439A2057210163C9002E3CC4 /* JoystickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +69,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		431E5B9720F87BED008715AD /* WebsocketSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSender.swift; sourceTree = "<group>"; };
+		431E5B9720F87BED008715AD /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
 		431E5C3720F87F7A008715AD /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = Starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		435164A920B617CE00A88CBD /* FlightController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164AC20B617CE00A88CBD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +84,7 @@
 		435164C820B617CF00A88CBD /* FlightControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlightControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164CC20B617CF00A88CBD /* FlightControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightControllerUITests.swift; sourceTree = "<group>"; };
 		435164CE20B617CF00A88CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		439A2054210163C9002E3CC4 /* JoystickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,13 +153,14 @@
 		435164AB20B617CE00A88CBD /* FlightController */ = {
 			isa = PBXGroup;
 			children = (
+				439A2054210163C9002E3CC4 /* JoystickView.swift */,
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
 				43E5568020CB0092006A2730 /* ext */,
 				435164B820B617CF00A88CBD /* Info.plist */,
 				435164B520B617CF00A88CBD /* LaunchScreen.storyboard */,
 				435164B020B617CE00A88CBD /* Main.storyboard */,
-				431E5B9720F87BED008715AD /* WebsocketSender.swift */,
+				431E5B9720F87BED008715AD /* WebsocketManager.swift */,
 				435164AE20B617CE00A88CBD /* ViewController.swift */,
 			);
 			path = FlightController;
@@ -345,8 +350,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				439A2055210163C9002E3CC4 /* JoystickView.swift in Sources */,
 				435164AF20B617CE00A88CBD /* ViewController.swift in Sources */,
-				431E5B9820F87BED008715AD /* WebsocketSender.swift in Sources */,
+				431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */,
 				435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,7 +362,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */,
-				431E5B9920F87BED008715AD /* WebsocketSender.swift in Sources */,
+				431E5B9920F87BED008715AD /* WebsocketManager.swift in Sources */,
+				439A2056210163C9002E3CC4 /* JoystickView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +372,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */,
-				431E5B9A20F87BED008715AD /* WebsocketSender.swift in Sources */,
+				431E5B9A20F87BED008715AD /* WebsocketManager.swift in Sources */,
+				439A2057210163C9002E3CC4 /* JoystickView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

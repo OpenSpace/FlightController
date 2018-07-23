@@ -108,6 +108,9 @@ struct NavigationSocketPayload: Codable {
 }
 
 class ViewController: UIViewController, WebSocketDelegate {
+
+    lazy var socketManager = WebsocketManager.shared
+
     @IBOutlet weak var accel_x: UILabel!
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
@@ -115,8 +118,6 @@ class ViewController: UIViewController, WebSocketDelegate {
 
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude! = nil
-
-    var _socket: WebSocket?
 
     let encoder = JSONEncoder()
 
@@ -146,29 +147,33 @@ class ViewController: UIViewController, WebSocketDelegate {
     func connectSocket() {
         let host = (socketHost.text ?? "").isEmpty ? socketHost.placeholder : socketHost.text
 
-        _socket = WebSocket(url: URL(string: "ws://\(host!):8001")!)
-        guard let socket = _socket else {return}
-        socket.connect()
+//        _socket = WebSocket(url: URL(string: "ws://\(host!):8001")!)
+//        guard let socket = _socket else {return}
+//        socket.connect()
 
-        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
-            payload: NavigationSocketPayload(type: "connect"))) else {
-            return
-        }
+        socketManager.addSocket(host: host!)
+        socketManager.connect()
 
-        socket.write(string: String(data: data, encoding: .utf8)!)
+        socketManager.write(data: NavigationSocket(topic:1,
+            payload: NavigationSocketPayload(type: "connect")))
+
     }
 
     @IBAction
     func disconnectSocket() {
-        guard let socket = _socket else {return}
-        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
-            payload: NavigationSocketPayload(type: "disconnect"))) else {
-            return
-        }
+//        guard let socket = _socket else {return}
+//        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
+//            payload: NavigationSocketPayload(type: "disconnect"))) else {
+//            return
+//        }
 
-        socket.write(string: String(data: data, encoding: .utf8)!)
+//        socket.write(string: String(data: data, encoding: .utf8)!)
 
-        socket.disconnect()
+//        socket.disconnect()
+
+        socketManager.write(data: NavigationSocket(topic:1,
+            payload: NavigationSocketPayload(type: "disconnect")))
+        socketManager.disconnect()
     }
 
     func startUpdates() {
@@ -177,6 +182,8 @@ class ViewController: UIViewController, WebSocketDelegate {
             setValueLabels(rollPitchYaw: [-1,-1,-1])
             return
         }
+
+        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
         motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
             guard let deviceMotion = deviceMotion else { return }
 
@@ -193,7 +200,8 @@ class ViewController: UIViewController, WebSocketDelegate {
 
             self.setValueLabels(rollPitchYaw: attitude)
 
-            guard let socket = self._socket else {return}
+//            guard let socket = self._socket else {return}
+            guard let socket: WebSocket = self.socketManager.socket else {return}
             if socket.isConnected {
                 // Websocket payload
                 var payload = NavigationSocketPayload(
@@ -203,12 +211,12 @@ class ViewController: UIViewController, WebSocketDelegate {
                 payload.threshold(t: 0.35)
 
                 if(!payload.isEmpty()) {
-                    payload.remap(low: -0.06, high: 0.06)
-                    guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
-                        return
-                    }
+                    payload.remap(low: -0.07, high: 0.07)
+//                    guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
+//                        return
+//                    }
 
-                    socket.write(string: String(data: data, encoding: .utf8)!)
+                    self.socketManager.write(data: NavigationSocket(topic:1, payload: payload))
                 }
             }
         }
