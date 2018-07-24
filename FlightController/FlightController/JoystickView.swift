@@ -12,6 +12,11 @@ func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
 }
 
+func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+    return CGPoint(x: lhs.x/rhs, y: lhs.y/rhs)
+}
+
+
 /**
  Object for tracking extra touch data
  */
@@ -47,16 +52,18 @@ struct JoystickTouch: Hashable {
     }
 
     func remap(value: CGPoint) -> CGPoint {
-        let screen = touch.view!.window!.bounds
-        let rX = (screen.maxX - screen.minX)
-        let rY = (screen.maxY - screen.minY)
-        let vX = (value.x - screen.minX)
-        let vY = (value.y - screen.minY)
-
-        return CGPoint(
-            x: lowX + vX * (highX - lowX) / rX,
-            y: lowY + vY * (highY - lowY) / rY
-        )
+//        let screen = touch.view!.window!.bounds
+//        let rX = (2*screen.maxX)// - -screen.minX)
+//        let rY = (2*screen.maxY)// - screen.minY)
+//        let vX = (value.x + screen.maxX)
+//        let vY = (value.y + screen.maxX)
+//
+//        return CGPoint(
+//            x: lowX + vX * (highX - lowX) / rX,
+//            y: lowY + vY * (highY - lowY) / rY
+//        )
+        let factor:CGFloat = 1000
+        return value/factor;
     }
 }
 
@@ -101,8 +108,8 @@ class JoystickView: UIView {
         if socket.isConnected {
             let distance = touch.distance()
 
-            //let r = touch.remap(value: distance)
-            let r = distance
+            let r = touch.remap(value: distance)
+            //let r = distance
             let dx = Double(r.x)
             let dy = Double(r.y)
 
