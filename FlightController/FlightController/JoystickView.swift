@@ -16,6 +16,15 @@ func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
     return CGPoint(x: lhs.x/rhs, y: lhs.y/rhs)
 }
 
+enum StickType: String {
+    case Left
+    case Right
+    case All
+
+    func name() -> String {
+        return self.rawValue
+    }
+}
 
 /**
  Object for tracking extra touch data
@@ -69,10 +78,15 @@ struct JoystickTouch: Hashable {
 
 class JoystickView: UIView {
 
-    // Tracking touches
+    // MARK: Members
     var touchData: Set<JoystickTouch> = []
     lazy var socketManager: WebsocketManager = WebsocketManager.shared
 
+    // MARK: Outlets
+    @IBOutlet weak var leftStick: UIImageView!
+    @IBOutlet weak var rightStick: UIImageView!
+
+    // MARK: Handle Touches
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             let j = JoystickTouch(touch: t, startLocation: t.location(in: self))
@@ -90,8 +104,10 @@ class JoystickView: UIView {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let midX = window!.bounds.midX
         for d in touchData {
             if(touches.contains(d.touch)) {
+                d.startLocation.x < midX ? resetLeftStick() : resetRightStick()
                 touchData.remove(d)
             }
         }
@@ -99,10 +115,11 @@ class JoystickView: UIView {
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchData.removeAll()
+        resetJoysticks()
     }
 
 
-    func sendData(touch: JoystickTouch, type: String) {
+    func sendData(touch: JoystickTouch, type: StickType) {
         guard let socket = socketManager.socket else { return }
 
         if socket.isConnected {
@@ -116,11 +133,11 @@ class JoystickView: UIView {
             var payload = NavigationSocketPayload()
 
             switch type {
-            case "left":
+            case StickType.Left:
                 payload.orbitX = dx
                 payload.zoomOut = dy
                 break
-            case "right":
+            case StickType.Right:
                 payload.panX = dx
                 payload.panY = dy
                 break
@@ -137,11 +154,65 @@ class JoystickView: UIView {
 
     }
 
+    // MARK: Stick handling
     func processLeftStick(touch: JoystickTouch) {
-        sendData(touch: touch, type: "left")
+        leftStick.center = touch.location()
+        sendData(touch: touch, type: StickType.Left)
     }
 
     func processRightStick(touch: JoystickTouch) {
-        sendData(touch: touch, type: "right")
+        rightStick.center = touch.location()
+        sendData(touch: touch, type: StickType.Right)
+    }
+
+    func resetJoysticks() {
+        resetStick(type: StickType.All)
+    }
+
+    func resetLeftStick() {
+        resetStick(type: StickType.Left)
+    }
+
+    func resetRightStick() {
+        resetStick(type: StickType.Right)
+    }
+
+    private func resetStick(type: StickType) {
+        guard let win = self.window else { return }
+
+        let duration = 0.2
+        let damping: CGFloat = 0.7
+
+        let left = CGPoint(x: win.bounds.maxX/4, y: win.bounds.maxY/2)
+        let right = CGPoint(x:win.bounds.maxX - win.bounds.maxX/4, y: win.bounds.maxY/2)
+
+        let leftAnimation = UIViewPropertyAnimator(duration: duration,
+                                                   dampingRatio: damping,
+                                                   animations: { [weak self] in
+                                                    self?.leftStick.center = left
+        })
+
+        let rightAnimation = UIViewPropertyAnimator(duration: duration,
+                                                    dampingRatio: damping,
+                                                    animations: { [weak self] in
+                                                        self?.rightStick.center = right
+        })
+
+        switch type {
+        case StickType.Left:
+            leftAnimation.startAnimation()
+            break
+        case StickType.Right:
+            rightAnimation.startAnimation()
+            break
+        case StickType.All:
+            leftAnimation.startAnimation()
+            rightAnimation.startAnimation()
+            break
+        default:
+            leftAnimation.startAnimation()
+            rightAnimation.startAnimation()
+            break
+        }
     }
 }
