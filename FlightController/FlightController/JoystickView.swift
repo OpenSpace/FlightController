@@ -134,12 +134,12 @@ class JoystickView: UIView {
 
             switch type {
             case StickType.Left:
-                payload.orbitX = dx
+                payload.globalRollX = dx
                 payload.zoomOut = dy
                 break
             case StickType.Right:
-                payload.panX = dx
-                payload.panY = dy
+                payload.orbitX = dx
+                payload.orbitY = dy
                 break
             default:
                 break
