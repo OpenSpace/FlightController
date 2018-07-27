@@ -127,9 +127,7 @@ class JoystickSKScene: SKScene {
         guard let socket = jsDelegate.networkManager?.socket else { return }
 
         if socket.isConnected {
-            let distance = touch.distance()
-            let r = touch.remap(value: distance)
-            //let r = distance
+            let r = touch.remap(value: touch.distance)
             let dx = Double(r.x)
             let dy = Double(r.y)
 
@@ -157,18 +155,17 @@ class JoystickSKScene: SKScene {
 
     }
 
-
     // MARK: Stick handling
     func processLeftStick(touch: JoystickTouch) {
         leftStick.removeAllActions()
-        leftStick.position = touch.location()
+        leftStick.position = touch.location
         leftStick.position.y = size.height - leftStick.position.y
         sendData(touch: touch, type: StickType.Left)
     }
 
     func processRightStick(touch: JoystickTouch) {
         rightStick.removeAllActions()
-        rightStick.position = touch.location()
+        rightStick.position = touch.location
         rightStick.position.y = size.height - rightStick.position.y
         sendData(touch: touch, type: StickType.Right)
     }

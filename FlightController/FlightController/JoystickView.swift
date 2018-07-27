@@ -37,27 +37,32 @@ struct JoystickTouch: Hashable {
 
     var touch: UITouch
     var startLocation: CGPoint = CGPoint()
+    var isDeep: Bool = false
+
+    var force: CGFloat {
+        return touch.force
+    }
 
     var hashValue: Int {
         return touch.hashValue
     }
+
+    var distance: CGPoint {
+        return location - startLocation
+    }
+
+    var location: CGPoint{
+        return location(inView: touch.view!)
+    }
+
 
     init(touch: UITouch, startLocation: CGPoint) {
         self.touch = touch
         self.startLocation = startLocation
     }
 
-    func location() -> CGPoint{
-        return location(in: touch.view!)
-
-    }
-
-    func location(in: UIView) -> CGPoint {
-        return touch.location(in: touch.view!)
-    }
-
-    func distance() -> CGPoint {
-        return location() - startLocation
+    func location(inView: UIView) -> CGPoint {
+        return touch.location(in: inView)
     }
 
     func remap(value: CGPoint) -> CGPoint {
@@ -132,7 +137,7 @@ class JoystickView: UIView, NetworkManager {
         guard let socket = networkManager?.socket else { return }
 
         if socket.isConnected {
-            let distance = touch.distance()
+            let distance = touch.distance
 
             let r = touch.remap(value: distance)
             //let r = distance
@@ -165,12 +170,12 @@ class JoystickView: UIView, NetworkManager {
 
     // MARK: Stick handling
     func processLeftStick(touch: JoystickTouch) {
-        leftStick.center = touch.location()
+        leftStick.center = touch.location
         sendData(touch: touch, type: StickType.Left)
     }
 
     func processRightStick(touch: JoystickTouch) {
-        rightStick.center = touch.location()
+        rightStick.center = touch.location
         sendData(touch: touch, type: StickType.Right)
     }
 
