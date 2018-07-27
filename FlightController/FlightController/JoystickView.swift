@@ -81,6 +81,10 @@ class JoystickView: UIView, NetworkManager {
     // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
 
+    func networkManager(_ manager: WebsocketManager?) {
+        networkManager = manager
+    }
+
     // MARK: Members
     var touchData: Set<JoystickTouch> = []
 

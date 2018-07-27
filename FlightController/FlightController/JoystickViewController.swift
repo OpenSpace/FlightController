@@ -12,6 +12,10 @@ class JoystickViewController: UIViewController, NetworkManager {
     // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
 
+    func networkManager(_ manager: WebsocketManager?) {
+        networkManager = manager
+    }
+
     // MARK: Outlets
     @IBOutlet weak var leftStick: UIImageView!
     @IBOutlet weak var rightStick: UIImageView!

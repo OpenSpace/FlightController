@@ -11,4 +11,7 @@ import CoreMotion
 protocol MotionManager {
     var motionManager: CMMotionManager? { get set }
     var referenceAttitude: CMAttitude! { get set }
+
+    func motionManager(_ manager: CMMotionManager?)
+    func referenceAttitude(_ reference: CMAttitude?)
 }

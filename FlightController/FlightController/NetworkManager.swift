@@ -8,4 +8,6 @@
 
 protocol NetworkManager {
     var networkManager: WebsocketManager? { get set }
+
+    func networkManager(_ manager: WebsocketManager?)
 }

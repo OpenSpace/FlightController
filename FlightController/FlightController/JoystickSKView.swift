@@ -7,15 +7,36 @@
 //
 
 import UIKit
+import CoreMotion
 import SpriteKit
 
-class JoystickSKViewController: UIViewController {
+class JoystickSKViewController: UIViewController, NetworkManager, MotionManager {
+    // MARK: NetworkManager protocol
+    var networkManager: WebsocketManager?
+
+    func networkManager(_ manager: WebsocketManager?) {
+        networkManager = manager
+    }
+
+    // MARK: MotionManager protocol
+    var motionManager: CMMotionManager?
+    var referenceAttitude: CMAttitude!
+
+    func motionManager(_ manager: CMMotionManager?) {
+        motionManager = manager
+    }
+
+    func referenceAttitude(_ reference: CMAttitude?) {
+        referenceAttitude = reference
+    }
+
+
+    // MARK: SpriteKit control
     var skView: SKView {
         return view as! SKView
     }
 
-    var networkManager: WebsocketManager?
-
+    // MARK: UIViewController overrides
     override func viewDidLoad() {
         skView.showsFPS = true
         skView.showsNodeCount = true
@@ -26,6 +47,17 @@ class JoystickSKViewController: UIViewController {
         scene.delegate = self
         skView.presentScene(scene)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? NetworkManager {
+            destination.networkManager(networkManager)
+        }
+        if let destination = segue.destination as? MotionManager {
+            destination.motionManager(motionManager)
+        }
+    }
+
 }
 
 extension JoystickSKViewController: SKSceneDelegate {

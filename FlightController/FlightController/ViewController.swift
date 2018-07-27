@@ -11,9 +11,25 @@ import CoreMotion
 import simd
 
 class ViewController: UIViewController, NetworkManager, MotionManager {
+    // MARK: MotionManager protocol
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude!
+
+    func motionManager(_ manager: CMMotionManager?) {
+        motionManager = manager
+    }
+
+    func referenceAttitude(_ reference: CMAttitude?) {
+        referenceAttitude = reference
+    }
+
+
+    // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
+
+    func networkManager(_ manager: WebsocketManager?) {
+        networkManager = manager
+    }
 
     //lazy var socketManager = WebsocketManager.shared
 
@@ -44,10 +60,11 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? JoystickViewController {
-            destination.networkManager = networkManager
-        } else if let destination = segue.destination as? JoystickSKViewController {
-            destination.networkManager = networkManager
+        if let destination = segue.destination as? NetworkManager {
+            destination.networkManager(networkManager)
+        }
+        if let destination = segue.destination as? MotionManager {
+            destination.motionManager(motionManager)
         }
     }
 
