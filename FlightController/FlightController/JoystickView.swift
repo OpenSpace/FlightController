@@ -76,17 +76,24 @@ struct JoystickTouch: Hashable {
     }
 }
 
-class JoystickView: UIView {
+class JoystickView: UIView, NetworkManager {
+
+    // MARK: NetworkManager protocol
+    var networkManager: WebsocketManager?
 
     // MARK: Members
     var touchData: Set<JoystickTouch> = []
-    lazy var socketManager: WebsocketManager = WebsocketManager.shared
 
     // MARK: Outlets
     @IBOutlet weak var leftStick: UIImageView!
     @IBOutlet weak var rightStick: UIImageView!
 
     // MARK: Handle Touches
+    private func handleActiveStick(touch: JoystickTouch) {
+        let midX = window!.bounds.midX
+        touch.startLocation.x < midX ? processLeftStick(touch: touch) : processRightStick(touch: touch)
+    }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             let j = JoystickTouch(touch: t, startLocation: t.location(in: self))
@@ -95,10 +102,9 @@ class JoystickView: UIView {
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let midX = window!.bounds.midX
         for d in touchData {
             if (touches.contains(d.touch)) {
-                d.startLocation.x < midX ? processLeftStick(touch: d) : processRightStick(touch: d)
+                handleActiveStick(touch: d)
             }
         }
     }
@@ -114,13 +120,12 @@ class JoystickView: UIView {
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        touchData.removeAll()
-        resetJoysticks()
+        reset()
     }
 
 
     func sendData(touch: JoystickTouch, type: StickType) {
-        guard let socket = socketManager.socket else { return }
+        guard let socket = networkManager?.socket else { return }
 
         if socket.isConnected {
             let distance = touch.distance()
@@ -130,11 +135,11 @@ class JoystickView: UIView {
             let dx = Double(r.x)
             let dy = Double(r.y)
 
-            var payload = NavigationSocketPayload()
+            var payload = OpenSpaceNavigationPayload()
 
             switch type {
             case StickType.Left:
-                payload.globalRollX = dx
+                payload.globalRollX = -dx
                 payload.zoomOut = dy
                 break
             case StickType.Right:
@@ -148,7 +153,7 @@ class JoystickView: UIView {
 
             if(!payload.isEmpty()) {
                 //payload.remap(low: -0.07, high: 0.07)
-                socketManager.write(data: NavigationSocket(topic:1, payload: payload))
+                networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
             }
         }
 
@@ -180,8 +185,8 @@ class JoystickView: UIView {
     private func resetStick(type: StickType) {
         guard let win = self.window else { return }
 
-        let duration = 0.2
-        let damping: CGFloat = 0.7
+        let duration = 0.3
+        let damping: CGFloat = 0.5
 
         let left = CGPoint(x: win.bounds.maxX/4, y: win.bounds.maxY/2)
         let right = CGPoint(x:win.bounds.maxX - win.bounds.maxX/4, y: win.bounds.maxY/2)
@@ -214,5 +219,10 @@ class JoystickView: UIView {
             rightAnimation.startAnimation()
             break
         }
+    }
+
+    func reset() {
+        touchData.removeAll()
+        resetJoysticks()
     }
 }

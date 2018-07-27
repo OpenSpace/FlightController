@@ -10,7 +10,6 @@ import Starscream
 
 final class WebsocketManager {
 
-
     static let shared = WebsocketManager()
 
     static let encoder = JSONEncoder()
@@ -32,7 +31,7 @@ final class WebsocketManager {
         socket?.disconnect()
     }
 
-    func write(data: NavigationSocket) {
+    func write(data: OpenSpaceNavigationSocket) {
         guard let data = try? WebsocketManager.encoder.encode(data) else {
             return
         }

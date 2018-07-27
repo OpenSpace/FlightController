@@ -9,122 +9,22 @@
 import UIKit
 import CoreMotion
 import simd
-import Starscream
 
-struct NavigationSocket: Codable {
-    static var threshold: Double = 0.3
-    var topic: Int
-    let type: String = "flightcontroller"
-    var payload: NavigationSocketPayload
-}
+class ViewController: UIViewController, NetworkManager, MotionManager {
+    var motionManager: CMMotionManager?
+    var referenceAttitude: CMAttitude!
+    var networkManager: WebsocketManager?
 
-struct NavigationSocketPayload: Codable {
-    var type: String = "inputState"
-    var orbitX: Double? = nil
-    var orbitY: Double? = nil
-    var panX: Double? = nil
-    var panY: Double? = nil
-    var globalRollX: Double? = nil
-    var globalRollY: Double? = nil
-    var localRollX: Double? = nil
-    var localRollY: Double? = nil
-    var zoomIn: Double? = nil
-    var zoomOut: Double? = nil
-
-    init(orbitX: Double? = nil,      orbitY: Double? = nil,
-         panX: Double? = nil,        panY: Double? = nil,
-         globalRollX: Double? = nil, globalRollY: Double? = nil,
-         localRollX: Double? = nil,  localRollY: Double? = nil,
-         zoomIn: Double? = nil,      zoomOut: Double? = nil)
-    {
-        self.orbitX = orbitX
-        self.orbitY = orbitY
-        self.panX = panX
-        self.panY = panY
-        self.globalRollX = globalRollX
-        self.globalRollY = globalRollY
-        self.localRollX = localRollX
-        self.localRollY = localRollY
-        self.zoomIn = zoomIn
-        self.zoomOut = zoomOut
-    }
-
-    init(type: String) {
-        self.type = type
-    }
-
-    mutating func threshold(t: Double) {
-        if orbitX != nil && abs(orbitX!) < t { orbitX = nil}
-        if orbitY != nil && abs(orbitY!) < t { orbitY = nil}
-        if panX != nil && abs(panX!) < t { panX = nil}
-        if panY != nil && abs(panY!) < t { panY = nil}
-        if globalRollX != nil && abs(globalRollX!) < t { globalRollX = nil}
-        if globalRollY != nil && abs(globalRollY!) < t { globalRollY = nil}
-        if localRollX != nil && abs(localRollX!) < t { localRollX = nil}
-        if localRollY != nil && abs(localRollY!) < t { localRollY = nil}
-        if zoomIn != nil && abs(zoomIn!) < t { zoomIn = nil}
-        if zoomOut != nil && abs(zoomOut!) < t { zoomOut = nil}
-    }
-
-    mutating func remap(low: Double, high: Double)
-    {
-        if orbitX != nil && orbitX! > 0 { orbitX = high}
-        if orbitY != nil && orbitY! > 0 { orbitY = high}
-        if panX != nil && panX! > 0 { panX = high}
-        if panY != nil && panY! > 0 { panY = high}
-        if globalRollX != nil && globalRollX! > 0 { globalRollX = high}
-        if globalRollY != nil && globalRollY! > 0 { globalRollY = high}
-        if localRollX != nil && localRollX! > 0 { localRollX = high}
-        if localRollY != nil && localRollY! > 0 { localRollY = high}
-        if zoomIn != nil && zoomIn! > 0 { zoomIn = high}
-        if zoomOut != nil && zoomOut! > 0 { zoomOut = high}
-
-        if orbitX != nil && orbitX! < 0 { orbitX = low}
-        if orbitY != nil && orbitY! < 0 { orbitY = low}
-        if panX != nil && panX! < 0 { panX = low}
-        if panY != nil && panY! < 0 { panY = low}
-        if globalRollX != nil && globalRollX! < 0 { globalRollX = low}
-        if globalRollY != nil && globalRollY! < 0 { globalRollY = low}
-        if localRollX != nil && localRollX! < 0 { localRollX = low}
-        if localRollY != nil && localRollY! < 0 { localRollY = low}
-        if zoomIn != nil && zoomIn! < 0 { zoomIn = low}
-        if zoomOut != nil && zoomOut! < 0 { zoomOut = low}
-    }
-
-    func isEmpty() -> Bool {
-        return (
-            (orbitX == nil || orbitX!.isZero)
-            && (orbitY == nil || orbitY!.isZero)
-            && (panX == nil || panX!.isZero)
-            && (panY == nil || panY!.isZero)
-            && (globalRollX == nil || globalRollX!.isZero)
-            && (globalRollY == nil || globalRollY!.isZero)
-            && (localRollX == nil || localRollX!.isZero)
-            && (localRollY == nil || localRollY!.isZero)
-            && (zoomIn == nil || zoomIn!.isZero)
-            && (zoomOut == nil || zoomOut!.isZero)
-        )
-    }
-}
-
-class ViewController: UIViewController, WebSocketDelegate {
-
-    lazy var socketManager = WebsocketManager.shared
+    //lazy var socketManager = WebsocketManager.shared
 
     @IBOutlet weak var accel_x: UILabel!
     @IBOutlet weak var accel_y: UILabel!
     @IBOutlet weak var accel_z: UILabel!
     @IBOutlet weak var socketHost: UITextField!
 
-    var motionManager: CMMotionManager?
-    var referenceAttitude: CMAttitude! = nil
-
-    let encoder = JSONEncoder()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        encoder.outputFormatting = .sortedKeys
     }
 
     override func didReceiveMemoryWarning() {
@@ -142,42 +42,36 @@ class ViewController: UIViewController, WebSocketDelegate {
         super.viewWillDisappear(animated)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? JoystickViewController {
+            destination.networkManager = networkManager
+        } else if let destination = segue.destination as? JoystickSKViewController {
+            destination.networkManager = networkManager
+        }
+    }
+
 
     @IBAction
     func connectSocket() {
         let host = (socketHost.text ?? "").isEmpty ? socketHost.placeholder : socketHost.text
 
-//        _socket = WebSocket(url: URL(string: "ws://\(host!):8001")!)
-//        guard let socket = _socket else {return}
-//        socket.connect()
+        networkManager?.addSocket(host: host!)
+        networkManager?.connect()
 
-        socketManager.addSocket(host: host!)
-        socketManager.connect()
-
-        socketManager.write(data: NavigationSocket(topic:1,
-            payload: NavigationSocketPayload(type: "connect")))
+        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
+            payload: OpenSpaceNavigationPayload(type: "connect")))
 
     }
 
     @IBAction
     func disconnectSocket() {
-//        guard let socket = _socket else {return}
-//        guard let data = try? self.encoder.encode(NavigationSocket(topic:1,
-//            payload: NavigationSocketPayload(type: "disconnect"))) else {
-//            return
-//        }
-
-//        socket.write(string: String(data: data, encoding: .utf8)!)
-
-//        socket.disconnect()
-
-        socketManager.write(data: NavigationSocket(topic:1,
-            payload: NavigationSocketPayload(type: "disconnect")))
-        socketManager.disconnect()
+        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
+            payload: OpenSpaceNavigationPayload(type: "disconnect")))
+        networkManager?.disconnect()
     }
 
     func startUpdates() {
-
         guard let motionManager = motionManager, motionManager.isDeviceMotionAvailable else {
             setValueLabels(rollPitchYaw: [-1,-1,-1])
             return
@@ -200,11 +94,10 @@ class ViewController: UIViewController, WebSocketDelegate {
 
             self.setValueLabels(rollPitchYaw: attitude)
 
-//            guard let socket = self._socket else {return}
-            guard let socket: WebSocket = self.socketManager.socket else {return}
+            guard let socket = self.networkManager?.socket else {return}
             if socket.isConnected {
                 // Websocket payload
-                var payload = NavigationSocketPayload(
+                var payload = OpenSpaceNavigationPayload(
                     orbitX: attitude.y
                     , globalRollX: attitude.z
                     , zoomOut: attitude.x)
@@ -212,11 +105,7 @@ class ViewController: UIViewController, WebSocketDelegate {
 
                 if(!payload.isEmpty()) {
                     payload.remap(low: -0.07, high: 0.07)
-//                    guard let data = try? self.encoder.encode(NavigationSocket(topic:1, payload: payload)) else {
-//                        return
-//                    }
-
-                    self.socketManager.write(data: NavigationSocket(topic:1, payload: payload))
+                    self.networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
                 }
             }
         }
@@ -235,22 +124,4 @@ class ViewController: UIViewController, WebSocketDelegate {
         accel_y.text = String(format: "Pitch: %+6.4f", rollPitchYaw[1])
         accel_z.text = String(format: "Yaw: %+6.4f", rollPitchYaw[2])
     }
-
-    // Mark: Starscream WebSocketDelegate
-    func websocketDidConnect(socket: WebSocketClient) {
-        print("Connected")
-    }
-
-    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print("Disconnected")
-    }
-
-    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("Message")
-    }
-
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        print("Data")
-    }
-
 }

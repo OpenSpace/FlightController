@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="uXX-Zj-X4q">
     <device id="retina5_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
@@ -66,7 +66,7 @@
                                 <state key="normal" title="Connect"/>
                                 <connections>
                                     <action selector="connectSocket" destination="BYZ-38-t0r" eventType="touchUpInside" id="AVB-X1-9ED"/>
-                                    <segue destination="FHP-gi-qTa" kind="show" id="cUh-o0-gaV"/>
+                                    <segue destination="ERj-D9-hDD" kind="show" id="agE-8m-hyb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyM-Mc-2Ak">
@@ -89,6 +89,7 @@
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="KVE-OG-wwZ"/>
                     <connections>
                         <outlet property="accel_x" destination="tPI-a9-S1Y" id="rkR-uV-ZDi"/>
                         <outlet property="accel_y" destination="A39-cm-7eo" id="RVE-U8-lfr"/>
@@ -98,7 +99,24 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-358" y="-282"/>
+            <point key="canvasLocation" x="-333" y="-463"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Tz3-JI-Eba">
+            <objects>
+                <navigationController id="uXX-Zj-X4q" userLabel="Navigation Controller" customClass="NavigationViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fni-Xc-TFf">
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="32"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="sDP-ya-hsH"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pE1-wa-O25" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1035" y="-463"/>
         </scene>
         <!--Joystick View Controller-->
         <scene sceneID="ywx-2d-h8q">
@@ -116,6 +134,11 @@
                                 <rect key="frame" x="569" y="132" width="116" height="112"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oIk-4p-JRM">
+                                <rect key="frame" x="356" y="324" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Accelerometer"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="gnP-as-nTq"/>
@@ -131,22 +154,20 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ceP-58-Z7W" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="355" y="-282"/>
+            <point key="canvasLocation" x="123" y="-2164"/>
         </scene>
-        <!--View Controller-->
+        <!--JoystickSK View Controller-->
         <scene sceneID="cUY-Zg-NSv">
             <objects>
-                <viewController id="ERj-D9-hDD" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="bSi-HK-JvS">
+                <viewController id="ERj-D9-hDD" customClass="JoystickSKViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
+                    <skView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G2y-W0-VBh">
                         <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="UPN-Ej-MYg"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </skView>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uss-kL-e4A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="358" y="746"/>
+            <point key="canvasLocation" x="358" y="-463"/>
         </scene>
     </scenes>
     <resources>

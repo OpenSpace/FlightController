@@ -8,7 +8,9 @@
 
 import UIKit
 
-class JoystickViewController: UIViewController {
+class JoystickViewController: UIViewController, NetworkManager {
+    // MARK: NetworkManager protocol
+    var networkManager: WebsocketManager?
 
     // MARK: Outlets
     @IBOutlet weak var leftStick: UIImageView!
@@ -26,8 +28,9 @@ class JoystickViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        guard let v: JoystickView = self.view as? JoystickView else { return }
-        v.resetJoysticks()
+        guard let stickView: JoystickView = self.view as? JoystickView else { return }
+        stickView.networkManager = networkManager
+        stickView.resetJoysticks()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -36,6 +39,12 @@ class JoystickViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? JoystickSKViewController {
+            destination.networkManager = networkManager
+        }
     }
 
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SpriteKit
 import CoreMotion
 
 @UIApplicationMain
@@ -14,11 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    let motionManager = CMMotionManager()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let a = window?.rootViewController as! ViewController
-        a.motionManager = motionManager
+        guard let rootView = window?.rootViewController as? NavigationViewController else { return false }
+
+        rootView.motionManager = CMMotionManager()
+        rootView.networkManager = WebsocketManager()
 
         return true
     }
