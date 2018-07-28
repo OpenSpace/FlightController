@@ -38,6 +38,7 @@ struct JoystickTouch: Hashable {
     var touch: UITouch
     var startLocation: CGPoint = CGPoint()
     var isDeep: Bool = false
+    var wasDeep: Bool = false
 
     var force: CGFloat {
         return touch.force

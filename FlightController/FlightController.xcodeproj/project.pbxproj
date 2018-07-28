@@ -37,7 +37,6 @@
 		43A27DD1210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
 		43A27DD2210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
 		43A27DD3210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
-		43C8630F2107C40C0040CB96 /* JoystickViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C8630E2107C40C0040CB96 /* JoystickViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,7 +105,6 @@
 		43A27DC4210A52FB004BAB32 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		43A27DC8210A860D004BAB32 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSpaceNavigation.swift; sourceTree = "<group>"; };
-		43C8630E2107C40C0040CB96 /* JoystickViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoystickViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */,
-				43C8630E2107C40C0040CB96 /* JoystickViewController.swift */,
 				439A2054210163C9002E3CC4 /* JoystickView.swift */,
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
@@ -387,7 +384,6 @@
 				4340A2FD210B914B00A4DC38 /* JoystickSKView.swift in Sources */,
 				431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */,
 				435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */,
-				43C8630F2107C40C0040CB96 /* JoystickViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

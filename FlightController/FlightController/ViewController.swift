@@ -11,9 +11,19 @@ import CoreMotion
 import simd
 
 class ViewController: UIViewController, NetworkManager, MotionManager {
+    // MARK: NetworkManager protocol
+    var networkManager: WebsocketManager?
+
+    func networkManager(_ manager: WebsocketManager?) {
+        networkManager = manager
+    }
+
     // MARK: MotionManager protocol
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude!
+    var currentAttitude: CMAttitude?
+    static var forceThreshold: CGFloat = 4.0
+
 
     func motionManager(_ manager: CMMotionManager?) {
         motionManager = manager
@@ -23,21 +33,18 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
         referenceAttitude = reference
     }
 
-
-    // MARK: NetworkManager protocol
-    var networkManager: WebsocketManager?
-
-    func networkManager(_ manager: WebsocketManager?) {
-        networkManager = manager
+    func startUpdates() {
+        return
     }
 
-    //lazy var socketManager = WebsocketManager.shared
+    func stopUpdates() {
+        return
+    }
 
-    @IBOutlet weak var accel_x: UILabel!
-    @IBOutlet weak var accel_y: UILabel!
-    @IBOutlet weak var accel_z: UILabel!
+    // MARK: Outlets
     @IBOutlet weak var socketHost: UITextField!
 
+    // MARK: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -50,11 +57,9 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startUpdates()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        stopUpdates()
         super.viewWillDisappear(animated)
     }
 
@@ -67,7 +72,6 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
             destination.motionManager(motionManager)
         }
     }
-
 
     @IBAction
     func connectSocket() {
@@ -86,59 +90,5 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
         networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
             payload: OpenSpaceNavigationPayload(type: "disconnect")))
         networkManager?.disconnect()
-    }
-
-    func startUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionAvailable else {
-            setValueLabels(rollPitchYaw: [-1,-1,-1])
-            return
-        }
-
-        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
-        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
-            guard let deviceMotion = deviceMotion else { return }
-
-            let cur = deviceMotion.attitude
-
-            // Store the reference attitude when motion mode is engaged
-            if (self.referenceAttitude == nil) {
-                self.referenceAttitude = cur.copy() as! CMAttitude
-            }
-
-            cur.multiply(byInverseOf: self.referenceAttitude)
-
-            let attitude = double3([cur.roll, cur.pitch, cur.yaw])
-
-            self.setValueLabels(rollPitchYaw: attitude)
-
-            guard let socket = self.networkManager?.socket else {return}
-            if socket.isConnected {
-                // Websocket payload
-                var payload = OpenSpaceNavigationPayload(
-                    orbitX: attitude.y
-                    , globalRollX: attitude.z
-                    , zoomOut: attitude.x)
-                payload.threshold(t: 0.35)
-
-                if(!payload.isEmpty()) {
-                    payload.remap(low: -0.07, high: 0.07)
-                    self.networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
-                }
-            }
-        }
-    }
-
-    func stopUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
-
-        // Release the reference attitude when motion disengaged
-        motionManager.stopDeviceMotionUpdates()
-        self.referenceAttitude = nil
-    }
-
-    func setValueLabels(rollPitchYaw: double3) {
-        accel_x.text = String(format: "Roll: %+6.4f", rollPitchYaw[0])
-        accel_y.text = String(format: "Pitch: %+6.4f", rollPitchYaw[1])
-        accel_z.text = String(format: "Yaw: %+6.4f", rollPitchYaw[2])
     }
 }
