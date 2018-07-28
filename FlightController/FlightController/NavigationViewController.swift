@@ -20,6 +20,8 @@ class NavigationViewController: UINavigationController, NetworkManager, MotionMa
     // MARK: MotionManager protocol
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude!
+    var currentAttitude: CMAttitude?
+    static var forceThreshold: CGFloat = 4.0
 
     func motionManager(_ manager: CMMotionManager?) {
         motionManager = manager
@@ -27,6 +29,14 @@ class NavigationViewController: UINavigationController, NetworkManager, MotionMa
 
     func referenceAttitude(_ reference: CMAttitude?) {
         referenceAttitude = reference
+    }
+
+    func startUpdates() {
+        return
+    }
+
+    func stopUpdates() {
+        return
     }
 
     // MARK: UIViewController overrides

@@ -21,6 +21,8 @@ class JoystickSKViewController: UIViewController, NetworkManager, MotionManager 
     // MARK: MotionManager protocol
     var motionManager: CMMotionManager?
     var referenceAttitude: CMAttitude!
+    var currentAttitude: CMAttitude?
+    static var forceThreshold: CGFloat = 4.0
 
     func motionManager(_ manager: CMMotionManager?) {
         motionManager = manager
@@ -30,6 +32,34 @@ class JoystickSKViewController: UIViewController, NetworkManager, MotionManager 
         referenceAttitude = reference
     }
 
+    func startUpdates() {
+        guard let motionManager = motionManager, motionManager.isDeviceMotionAvailable else {
+            return
+        }
+
+        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
+        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
+            guard let deviceMotion = deviceMotion else { return }
+
+            self.currentAttitude = deviceMotion.attitude
+
+            // Store the reference attitude when motion mode is engaged
+            if (self.referenceAttitude == nil) {
+                self.referenceAttitude = self.currentAttitude!.copy() as! CMAttitude
+            }
+
+            self.currentAttitude!.multiply(byInverseOf: self.referenceAttitude)
+        }
+    }
+
+    func stopUpdates() {
+        guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
+
+        // Release the reference attitude when motion disengaged
+        motionManager.stopDeviceMotionUpdates()
+        self.referenceAttitude = nil
+        self.currentAttitude = nil
+    }
 
     // MARK: SpriteKit control
     var skView: SKView {
@@ -61,14 +91,26 @@ class JoystickSKViewController: UIViewController, NetworkManager, MotionManager 
 }
 
 extension JoystickSKViewController: SKSceneDelegate {
-
     func update(_ currentTime: TimeInterval, for scene: SKScene) {
         if let joystickScene = scene as? JoystickSKScene {
             if (!joystickScene.touchData.isEmpty) {
-                for d in joystickScene.touchData {
-                    joystickScene.handleActiveStick(touch: d)
-                }
+                handleTouches(joystickScene)
             }
+        }
+    }
+
+    private func handleTouches(_ scene: JoystickSKScene) {
+
+        // Must pop and replace to edit
+        for d in scene.touchData {
+            var tmpTouch = scene.touchData.remove(d)!
+            scene.handleActiveStick(touch: &tmpTouch)
+            scene.touchData.update(with: tmpTouch)
+        }
+
+        if ((scene.touchData.filter { $0.isDeep }).isEmpty) {
+            scene.hasForce = false
+            stopUpdates()
         }
     }
 }
@@ -83,6 +125,7 @@ class JoystickSKScene: SKScene {
     var touchData: Set<JoystickTouch> = []
     let leftStick = SKSpriteNode(imageNamed: "Joystick")
     let rightStick = SKSpriteNode(imageNamed: "Joystick")
+    var hasForce: Bool = false
 
     // MARK: SKScene overrides
     override func didMove(to view: SKView) {
@@ -97,8 +140,32 @@ class JoystickSKScene: SKScene {
     }
 
     // MARK: Handle Touches
-    func handleActiveStick(touch: JoystickTouch) {
+    func handleActiveStick(touch: inout JoystickTouch) {
         let midX = size.width/2
+        if let del = self.delegate as? MotionManager {
+            //print("\(touch.hashValue) \(touch.isDeep) \(touch.wasDeep)")
+            if (touch.force < JoystickSKViewController.forceThreshold) {
+                if (!touch.wasDeep) {
+                    touch.isDeep = false
+                }
+            } else {
+                if (!touch.wasDeep) {
+                    var notif:UINotificationFeedbackGenerator! = UINotificationFeedbackGenerator()
+                    notif.notificationOccurred(.success)
+                    touch.wasDeep = true
+                    touch.isDeep = true
+                    notif = nil
+                }
+            }
+
+            if (touch.isDeep) {
+                if (!hasForce) {
+                    hasForce = true
+                    del.startUpdates()
+                }
+            }
+            print("\(touch.hashValue) \(touch.isDeep) \(touch.wasDeep)")
+        }
         touch.startLocation.x < midX ? processLeftStick(touch: touch) : processRightStick(touch: touch)
     }
 
@@ -127,12 +194,14 @@ class JoystickSKScene: SKScene {
         guard let socket = jsDelegate.networkManager?.socket else { return }
 
         if socket.isConnected {
+
+            var payload = OpenSpaceNavigationPayload()
+
             let r = touch.remap(value: touch.distance)
             let dx = Double(r.x)
             let dy = Double(r.y)
 
-            var payload = OpenSpaceNavigationPayload()
-
+            // Handle joystick location
             switch type {
             case StickType.Left:
                 payload.globalRollX = -dx
@@ -143,8 +212,27 @@ class JoystickSKScene: SKScene {
                 payload.orbitY = dy
                 break
             default:
-        	        break
+                break
             }
+
+            // Handle deep press
+            if touch.isDeep {
+                if let del = self.delegate as? MotionManager {
+                    switch type {
+                    case StickType.Left:
+                        payload.panY = del.currentAttitude?.roll
+                        if (payload.panY != nil) {
+                            payload.panY! /= 10
+                        }
+                        break
+                    case StickType.Right:
+                        break
+                    default:
+                        break
+                    }
+                }
+            }
+
             //payload.threshold(t: 0.005)
 
             if(!payload.isEmpty()) {
