@@ -143,7 +143,6 @@ class JoystickSKScene: SKScene {
     func handleActiveStick(touch: inout JoystickTouch) {
         let midX = size.width/2
         if let del = self.delegate as? MotionManager {
-            //print("\(touch.hashValue) \(touch.isDeep) \(touch.wasDeep)")
             if (touch.force < JoystickSKViewController.forceThreshold) {
                 if (!touch.wasDeep) {
                     touch.isDeep = false
@@ -164,7 +163,6 @@ class JoystickSKScene: SKScene {
                     del.startUpdates()
                 }
             }
-            print("\(touch.hashValue) \(touch.isDeep) \(touch.wasDeep)")
         }
         touch.startLocation.x < midX ? processLeftStick(touch: touch) : processRightStick(touch: touch)
     }
