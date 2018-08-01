@@ -10,8 +10,6 @@ import Starscream
 
 final class WebsocketManager {
 
-    static let shared = WebsocketManager()
-
     static let encoder = JSONEncoder()
 
     var socket: WebSocket?

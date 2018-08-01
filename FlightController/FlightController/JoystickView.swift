@@ -56,6 +56,13 @@ struct JoystickTouch: Hashable {
         return location(inView: touch.view!)
     }
 
+    var width: CGFloat {
+        return touch.view!.bounds.width
+    }
+
+    var height: CGFloat {
+        return touch.view!.bounds.height
+    }
 
     init(touch: UITouch, startLocation: CGPoint) {
         self.touch = touch

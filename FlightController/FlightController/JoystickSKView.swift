@@ -117,7 +117,6 @@ extension JoystickSKViewController: SKSceneDelegate {
 
 class JoystickSKScene: SKScene {
     // MARK: Members
-
     var jsDelegate: JoystickSKViewController {
         return delegate as! JoystickSKViewController
     }
@@ -126,6 +125,9 @@ class JoystickSKScene: SKScene {
     let leftStick = SKSpriteNode(imageNamed: "Joystick")
     let rightStick = SKSpriteNode(imageNamed: "Joystick")
     var hasForce: Bool = false
+        var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
+
+    typealias AXIS = ControllerAxes
 
     // MARK: SKScene overrides
     override func didMove(to view: SKView) {
@@ -195,19 +197,24 @@ class JoystickSKScene: SKScene {
 
             var payload = OpenSpaceNavigationPayload()
 
-            let r = touch.remap(value: touch.distance)
-            let dx = Double(r.x)
-            let dy = Double(r.y)
+//            let r = touch.remap(value: touch.distance)
+//            let dx = Double(r.x)
+//            let dy = Double(r.y)
+
 
             // Handle joystick location
             switch type {
             case StickType.Left:
-                payload.globalRollX = -dx
-                payload.zoomOut = dy
+                let xAxis = config.axisMapping[AXIS.StickLeftX]!
+                let yAxis = config.axisMapping[AXIS.StickLeftY]!
+                payload[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                payload[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             case StickType.Right:
-                payload.orbitX = dx
-                payload.orbitY = dy
+                let xAxis = config.axisMapping[AXIS.StickRightX]!
+                let yAxis = config.axisMapping[AXIS.StickRightY]!
+                payload[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                payload[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             default:
                 break
@@ -218,9 +225,9 @@ class JoystickSKScene: SKScene {
                 if let del = self.delegate as? MotionManager {
                     switch type {
                     case StickType.Left:
-                        payload.panY = del.currentAttitude?.roll
-                        if (payload.panY != nil) {
-                            payload.panY! /= 10
+                        if let roll = del.currentAttitude?.roll {
+                            let rollAxis = config.axisMapping[AXIS.LeftRoll]!
+                            payload[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
                         }
                         break
                     case StickType.Right:
