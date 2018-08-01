@@ -31,11 +31,11 @@ class NavigationViewController: UINavigationController, NetworkManager, MotionMa
         referenceAttitude = reference
     }
 
-    func startUpdates() {
+    func startMotionUpdates() {
         return
     }
 
-    func stopUpdates() {
+    func stopMotionUpdates() {
         return
     }
 

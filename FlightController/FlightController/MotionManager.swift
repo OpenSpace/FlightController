@@ -18,6 +18,6 @@ protocol MotionManager {
     func motionManager(_ manager: CMMotionManager?)
     func referenceAttitude(_ reference: CMAttitude?)
 
-    func startUpdates()
-    func stopUpdates()
+    func startMotionUpdates()
+    func stopMotionUpdates()
 }

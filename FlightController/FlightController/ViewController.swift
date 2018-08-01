@@ -10,37 +10,7 @@ import UIKit
 import CoreMotion
 import simd
 
-class ViewController: UIViewController, NetworkManager, MotionManager {
-    // MARK: NetworkManager protocol
-    var networkManager: WebsocketManager?
-
-    func networkManager(_ manager: WebsocketManager?) {
-        networkManager = manager
-    }
-
-    // MARK: MotionManager protocol
-    var motionManager: CMMotionManager?
-    var referenceAttitude: CMAttitude!
-    var currentAttitude: CMAttitude?
-    static var forceThreshold: CGFloat = 4.0
-
-
-    func motionManager(_ manager: CMMotionManager?) {
-        motionManager = manager
-    }
-
-    func referenceAttitude(_ reference: CMAttitude?) {
-        referenceAttitude = reference
-    }
-
-    func startUpdates() {
-        return
-    }
-
-    func stopUpdates() {
-        return
-    }
-
+class ViewController: ConfiguredViewController {
     // MARK: Outlets
     @IBOutlet weak var socketHost: UITextField!
 
@@ -61,16 +31,6 @@ class ViewController: UIViewController, NetworkManager, MotionManager {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? NetworkManager {
-            destination.networkManager(networkManager)
-        }
-        if let destination = segue.destination as? MotionManager {
-            destination.motionManager(motionManager)
-        }
     }
 
     @IBAction

@@ -7,60 +7,9 @@
 //
 
 import UIKit
-import CoreMotion
 import SpriteKit
 
-class JoystickSKViewController: UIViewController, NetworkManager, MotionManager {
-    // MARK: NetworkManager protocol
-    var networkManager: WebsocketManager?
-
-    func networkManager(_ manager: WebsocketManager?) {
-        networkManager = manager
-    }
-
-    // MARK: MotionManager protocol
-    var motionManager: CMMotionManager?
-    var referenceAttitude: CMAttitude!
-    var currentAttitude: CMAttitude?
-    static var forceThreshold: CGFloat = 4.0
-
-    func motionManager(_ manager: CMMotionManager?) {
-        motionManager = manager
-    }
-
-    func referenceAttitude(_ reference: CMAttitude?) {
-        referenceAttitude = reference
-    }
-
-    func startUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionAvailable else {
-            return
-        }
-
-        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
-        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
-            guard let deviceMotion = deviceMotion else { return }
-
-            self.currentAttitude = deviceMotion.attitude
-
-            // Store the reference attitude when motion mode is engaged
-            if (self.referenceAttitude == nil) {
-                self.referenceAttitude = self.currentAttitude!.copy() as! CMAttitude
-            }
-
-            self.currentAttitude!.multiply(byInverseOf: self.referenceAttitude)
-        }
-    }
-
-    func stopUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
-
-        // Release the reference attitude when motion disengaged
-        motionManager.stopDeviceMotionUpdates()
-        self.referenceAttitude = nil
-        self.currentAttitude = nil
-    }
-
+class JoystickSKViewController: ConfiguredViewController {
     // MARK: SpriteKit control
     var skView: SKView {
         return view as! SKView
@@ -77,17 +26,6 @@ class JoystickSKViewController: UIViewController, NetworkManager, MotionManager 
         scene.delegate = self
         skView.presentScene(scene)
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? NetworkManager {
-            destination.networkManager(networkManager)
-        }
-        if let destination = segue.destination as? MotionManager {
-            destination.motionManager(motionManager)
-        }
-    }
-
 }
 
 extension JoystickSKViewController: SKSceneDelegate {
@@ -110,7 +48,7 @@ extension JoystickSKViewController: SKSceneDelegate {
 
         if ((scene.touchData.filter { $0.isDeep }).isEmpty) {
             scene.hasForce = false
-            stopUpdates()
+            stopMotionUpdates()
         }
     }
 }
@@ -162,7 +100,7 @@ class JoystickSKScene: SKScene {
             if (touch.isDeep) {
                 if (!hasForce) {
                     hasForce = true
-                    del.startUpdates()
+                    del.startMotionUpdates()
                 }
             }
         }
@@ -196,11 +134,6 @@ class JoystickSKScene: SKScene {
         if socket.isConnected {
 
             var payload = OpenSpaceNavigationPayload()
-
-//            let r = touch.remap(value: touch.distance)
-//            let dx = Double(r.x)
-//            let dy = Double(r.y)
-
 
             // Handle joystick location
             switch type {
@@ -238,10 +171,7 @@ class JoystickSKScene: SKScene {
                 }
             }
 
-            //payload.threshold(t: 0.005)
-
             if(!payload.isEmpty()) {
-                //payload.remap(low: -0.07, high: 0.07)
                 jsDelegate.networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
             }
         }
@@ -293,10 +223,6 @@ class JoystickSKScene: SKScene {
             rightStick.run(rightAction)
             break
         case StickType.All:
-            leftStick.run(leftAction)
-            rightStick.run(rightAction)
-            break
-        default:
             leftStick.run(leftAction)
             rightStick.run(rightAction)
             break
