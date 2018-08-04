@@ -39,10 +39,6 @@ class ViewController: ConfiguredViewController {
 
         networkManager?.addSocket(host: host!)
         networkManager?.connect()
-
-        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
-            payload: OpenSpaceNavigationPayload(type: "connect")))
-
     }
 
     @IBAction

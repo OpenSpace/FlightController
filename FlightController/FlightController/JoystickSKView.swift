@@ -69,7 +69,7 @@ class JoystickSKScene: SKScene {
 
     // MARK: SKScene overrides
     override func didMove(to view: SKView) {
-        backgroundColor = SKColor.darkGray
+        backgroundColor = SKColor.black
         addChild(leftStick)
         addChild(rightStick)
         resetJoysticks()

@@ -41,10 +41,10 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardAppearance="alert"/>
                             </textField>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="KVE-OG-wwZ"/>
@@ -80,11 +80,41 @@
                     <skView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G2y-W0-VBh">
                         <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="kEi-b4-P8p" appends="YES" id="SUy-L5-tLX"/>
+                        </connections>
                     </skView>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uss-kL-e4A" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" numberOfTapsRequired="3" id="kEi-b4-P8p">
+                    <connections>
+                        <segue destination="e7K-Du-qQx" kind="show" id="q5n-0r-SEX"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="594" y="-464"/>
+            <point key="canvasLocation" x="374" y="-465"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="X1u-CX-kKX">
+            <objects>
+                <viewController id="e7K-Du-qQx" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="J9E-ll-W8g">
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pMy-V1-fOf">
+                                <rect key="frame" x="31" y="95" width="781" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="w73-M6-p79"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hVI-7H-4z8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1072.9064039408868" y="-471.19999999999999"/>
         </scene>
     </scenes>
 </document>

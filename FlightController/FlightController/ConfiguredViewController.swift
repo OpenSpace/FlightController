@@ -8,8 +8,20 @@
 
 import UIKit
 import CoreMotion
+import Starscream
 
+struct OpenSpacePayload:Decodable {
+    var payload: [String: AnyObject]
+}
+
+struct OpenSpaceTopic: Decodable {
+    var payload: OpenSpacePayload
+    var topic: Int
+}
 class ConfiguredViewController: UIViewController, NetworkManager, MotionManager {
+
+    static var focusNodes: [String] = []
+
     // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
 
@@ -74,4 +86,37 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager 
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        networkManager?.delegate = self
+    }
 }
+
+extension ConfiguredViewController: WebSocketDelegate {
+
+    func websocketDidConnect(socket: WebSocketClient) {
+        print("Connected")
+        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
+                                                              payload: OpenSpaceNavigationPayload(type: "connect")))
+
+    }
+
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        print("Disconnected")
+    }
+
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        print("Message received: \(text)")
+        guard let json = try? WebsocketManager.decoder.decode(OpenSpaceTopic.self, from: text.data(using: .utf8)!) else {
+            print("Doink")
+            print(text.data(using: .utf8)!)
+            return
+        }
+        print(json.payload)
+    }
+
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        print("Data received")
+    }
+}
+

@@ -11,6 +11,9 @@ import Starscream
 final class WebsocketManager {
 
     static let encoder = JSONEncoder()
+    static let decoder = JSONDecoder()
+    
+    var delegate: WebSocketDelegate?
 
     var socket: WebSocket?
 
@@ -19,6 +22,7 @@ final class WebsocketManager {
     
     func addSocket(host: String = "localhost", port: Int = 8001) {
         socket = WebSocket(url: URL(string: "ws://\(host):\(port)")!)
+        socket?.delegate = delegate
     }
     
     func connect() {
@@ -35,5 +39,4 @@ final class WebsocketManager {
         }
         socket?.write(string: String(data: data, encoding: .utf8)!)
     }
-
 }
