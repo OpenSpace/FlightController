@@ -10,6 +10,20 @@ import UIKit
 import CoreMotion
 
 class ConfiguredViewController: UIViewController, NetworkManager, MotionManager {
+    // MARK: UIViewController overrides
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let destination = segue.destination as? NetworkManager {
+            destination.networkManager(networkManager)
+        }
+        if let destination = segue.destination as? MotionManager {
+            destination.motionManager(motionManager)
+        }
+        if let destination = segue.destination as? ConfiguredViewController {
+            // Send configuration along
+        }
+    }
+
     // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
 
@@ -58,20 +72,6 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager 
         motionManager.stopDeviceMotionUpdates()
         self.referenceAttitude = nil
         self.currentAttitude = nil
-    }
-
-    // MARK: UIViewController overrides
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? NetworkManager {
-            destination.networkManager(networkManager)
-        }
-        if let destination = segue.destination as? MotionManager {
-            destination.motionManager(motionManager)
-        }
-        if let destination = segue.destination as? ConfiguredViewController {
-            // Send configuration along
-        }
     }
 
 }

@@ -16,76 +16,79 @@ func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
     return CGPoint(x: lhs.x/rhs, y: lhs.y/rhs)
 }
 
+/// The types of sticks available to the controller
 enum StickType: String {
     case Left
     case Right
     case All
 
-    func name() -> String {
+    /// The value as a String
+    var name: String {
         return self.rawValue
     }
 }
 
 /**
- Object for tracking extra touch data
+ Object for tracking touches and necessary data
  */
 struct JoystickTouch: Hashable {
-    var lowX: CGFloat = -0.1
-    var lowY: CGFloat = -0.1
-    var highX: CGFloat = 0.1
-    var highY: CGFloat = 0.1
-
+    /// The original UITouch object
     var touch: UITouch
+
+    /// The location where the touch was first registered
     var startLocation: CGPoint = CGPoint()
+
+    /// Is a force touch
     var isDeep: Bool = false
+
+    /// Was a force touch previously
     var wasDeep: Bool = false
 
+    /// The amount of force
     var force: CGFloat {
         return touch.force
     }
 
+    /// The hashing value is the original touch's hash
     var hashValue: Int {
         return touch.hashValue
     }
 
+    /// The distance from the touch's current location to where it started
     var distance: CGPoint {
         return location - startLocation
     }
 
+    /// The current location of the touch in it's registered view
     var location: CGPoint{
         return location(inView: touch.view!)
     }
 
+    /// The width of the touch's registered view
     var width: CGFloat {
         return touch.view!.bounds.width
     }
 
+    /// The height of the touch's registered view
     var height: CGFloat {
         return touch.view!.bounds.height
     }
 
+    /// Initalize with a UITouch and a CGPoint starting location
     init(touch: UITouch, startLocation: CGPoint) {
         self.touch = touch
         self.startLocation = startLocation
     }
 
+    /**
+     The location of the touch in a specified UIView
+
+     - Parameter inView: The reference UIView
+
+     - Returns: A CGPoint of the location
+     */
     func location(inView: UIView) -> CGPoint {
         return touch.location(in: inView)
-    }
-
-    func remap(value: CGPoint) -> CGPoint {
-//        let screen = touch.view!.window!.bounds
-//        let rX = (2*screen.maxX)// - -screen.minX)
-//        let rY = (2*screen.maxY)// - screen.minY)
-//        let vX = (value.x + screen.maxX)
-//        let vY = (value.y + screen.maxX)
-//
-//        return CGPoint(
-//            x: lowX + vX * (highX - lowX) / rX,
-//            y: lowY + vY * (highY - lowY) / rY
-//        )
-        let factor:CGFloat = 1000
-        return value/factor;
     }
 }
 
@@ -147,8 +150,7 @@ class JoystickView: UIView, NetworkManager {
         if socket.isConnected {
             let distance = touch.distance
 
-            let r = touch.remap(value: distance)
-            //let r = distance
+            let r = distance
             let dx = Double(r.x)
             let dy = Double(r.y)
 

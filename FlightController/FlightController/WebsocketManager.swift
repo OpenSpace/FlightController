@@ -21,8 +21,9 @@ final class WebsocketManager {
         socket = WebSocket(url: URL(string: "ws://\(host):\(port)")!)
     }
     
-    func connect() {
+    func connect() -> Bool {
         socket?.connect()
+        return (socket?.isConnected)!
     }
 
     func disconnect() {

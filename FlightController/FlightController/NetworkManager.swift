@@ -7,7 +7,13 @@
 //
 
 protocol NetworkManager {
+    /// A WebsocketManager? for handing the connection
     var networkManager: WebsocketManager? { get set }
 
+    /**
+     Set self.networkManager
+
+     - Parameter manager: A WebsocketManager?
+     */
     func networkManager(_ manager: WebsocketManager?)
 }

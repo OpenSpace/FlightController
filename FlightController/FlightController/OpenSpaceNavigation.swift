@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// The motions available in OpenSpace mapped to their JSON object names
 enum OpenSpaceMotions:String {
     case OrbitX = "orbitX"
     case OrbitY = "orbitY"
@@ -21,6 +22,7 @@ enum OpenSpaceMotions:String {
     case LocalRollY = "localRollY"
 }
 
+/// The control axes available in the app
 enum ControllerAxes {
     case StickLeftX
     case StickLeftY
@@ -34,32 +36,65 @@ enum ControllerAxes {
     case RightYaw
 }
 
-struct ControllerAxis {
+/// Settings for an individual controller axis
+struct ControllerAxisSettings {
+    /// Which motion the axis maps to
     var motion: OpenSpaceMotions?
+
+    /// Is inverted from normal mapping
     var isInverted: Bool = false
-    var sensitivity: Float = 1.0
+
+    /// Threshold magnitude before recognizing the axis has registered a value
     var threshold: Float = 0.0
 
+    /// Sensitivity of the axis, applied after thresholding
+    var sensitivity: Float = 1.0
+
+    /// The value attenuator (inverted x sensitivity)
     var multiplier: Float {
         return isInverted ? -sensitivity : sensitivity
     }
 
+    /// The JSON object name of the OpenSpace motion axis
     var motionName: String {
         return motion!.rawValue
     }
+
+    /**
+     Applies this controller's settings to remap the raw input UI value.
+     First thresholds, then inverts and applies the sensitivity.
+
+     - Parameter value: Raw input CGFloat value
+
+     - Returns: 0.0 if under threshold, else attenuated Double value
+     */
 
     func attenuate(_ value: CGFloat) -> Double {
         let f = Float(value)
         return abs(f) < threshold ? 0.0 : Double(f * self.multiplier)
     }
 
+    /**
+     Applies this controller's settings to remap the raw input UI touch object.
+     First thresholds, then inverts and applies the sensitivity.
+
+     - Parameters:
+        - touch: A JoystickTouch object
+        - axis: Calculate for x or y axis. Boolean where x = false, y = true
+
+     - Returns: 0.0 if under threshold, else attenuated Double value
+     */
     func attenuate(touch: JoystickTouch, axis: Bool) -> Double {
         let value = axis ? touch.distance.y : touch.distance.x
         let max = axis ? touch.height : touch.width
 
+
+        let offset = value/max
+
         return abs(value/max) < CGFloat(threshold) ? 0.0 : Double(value * CGFloat(self.multiplier))
     }
 
+    /// Init passing all values
     init(motion: OpenSpaceMotions, invert: Bool, sensitivity: Float, threshold: Float) {
         self.motion = motion
         self.isInverted = invert
@@ -67,37 +102,49 @@ struct ControllerAxis {
         self.threshold = threshold
     }
 
+    /// Init using defaults for sensitvity (1.0) and threshold (0.0)
     init(motion: OpenSpaceMotions, invert: Bool) {
         self.motion = motion
         self.isInverted = invert
     }
 }
 
+/// A configuration for the axes
 struct OpenSpaceAxisConfiguration {
 
-    var axisMapping: [ControllerAxes:ControllerAxis] =
+    /**
+     Dictionary mapping the available axes to a setting object.
+
+     Default has:
+        - LeftStickX -> GlobalRollX
+        - LeftStickY -> ZoomOut
+        - LeftRoll -> PanY
+        - RightStickX -> OrbitX
+        - RightStickY -> OrbitY
+     */
+    var axisMapping: [ControllerAxes:ControllerAxisSettings] =
         [ ControllerAxes.StickLeftX:
-            ControllerAxis(motion: OpenSpaceMotions.GlobalRollX,
+            ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
                            invert: true,
                            sensitivity: 0.001,
                            threshold: 0.1)
         , ControllerAxes.StickLeftY:
-            ControllerAxis(motion: OpenSpaceMotions.ZoomOut,
+            ControllerAxisSettings(motion: OpenSpaceMotions.ZoomOut,
                            invert: false,
                            sensitivity: 0.001,
                            threshold: 0.05)
         , ControllerAxes.StickRightX:
-            ControllerAxis(motion: OpenSpaceMotions.OrbitX,
+            ControllerAxisSettings(motion: OpenSpaceMotions.OrbitX,
                            invert: false,
                            sensitivity: 0.001,
                            threshold: 0.05)
         , ControllerAxes.StickRightY:
-            ControllerAxis(motion: OpenSpaceMotions.OrbitY,
+            ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
                            invert: false,
                            sensitivity: 0.001,
                            threshold: 0.05)
         , ControllerAxes.LeftRoll:
-            ControllerAxis(motion: OpenSpaceMotions.PanY,
+            ControllerAxisSettings(motion: OpenSpaceMotions.PanY,
                            invert: false,
                            sensitivity: 0.1,
                            threshold: 0.05)

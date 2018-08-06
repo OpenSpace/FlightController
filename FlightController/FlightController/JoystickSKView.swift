@@ -37,6 +37,12 @@ extension JoystickSKViewController: SKSceneDelegate {
         }
     }
 
+    /**
+     Handle interaction with the scene. Let's the scene handle each touch
+     individually, then manages the aggregate settings and motion
+
+     - Parameter scene: The active JoystickSKScene
+     */
     private func handleTouches(_ scene: JoystickSKScene) {
 
         // Must pop and replace to edit
@@ -59,12 +65,22 @@ class JoystickSKScene: SKScene {
         return delegate as! JoystickSKViewController
     }
 
+    /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
-    let leftStick = SKSpriteNode(imageNamed: "Joystick")
-    let rightStick = SKSpriteNode(imageNamed: "Joystick")
-    var hasForce: Bool = false
-        var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
 
+    /// The left joystick object
+    let leftStick = SKSpriteNode(imageNamed: "Joystick")
+
+    /// The right joystick object
+    let rightStick = SKSpriteNode(imageNamed: "Joystick")
+
+    /// Whether deep press was engaged but not yet released
+    var hasForce: Bool = false
+
+    /// The configurations for the axes
+    var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
+
+    /// Convenience alias for ConrollerAxes
     typealias AXIS = ControllerAxes
 
     // MARK: SKScene overrides
@@ -80,6 +96,13 @@ class JoystickSKScene: SKScene {
     }
 
     // MARK: Handle Touches
+
+    /**
+     Performas all actions associated with an active touch (began, moved, or
+     unmoved-but-active) The touch object may be altered to register new states.
+
+     - Parameter touch: The JoystickTouch to process (inout)
+     */
     func handleActiveStick(touch: inout JoystickTouch) {
         let midX = size.width/2
         if let del = self.delegate as? MotionManager {
@@ -128,6 +151,13 @@ class JoystickSKScene: SKScene {
         reset()
     }
 
+    /**
+     Generates and sends the websocket payload to OpenSpace.
+
+     - Parameters:
+        - touch: A JoystickTouch object
+        - type: The StickType being handled
+     */
     func sendData(touch: JoystickTouch, type: StickType) {
         guard let socket = jsDelegate.networkManager?.socket else { return }
 
@@ -179,6 +209,12 @@ class JoystickSKScene: SKScene {
     }
 
     // MARK: Stick handling
+
+    /**
+     Process a touch using the left joystick's settings
+
+     - Parameter touch: A JoystickTouch
+     */
     func processLeftStick(touch: JoystickTouch) {
         leftStick.removeAllActions()
         leftStick.position = touch.location
@@ -186,6 +222,11 @@ class JoystickSKScene: SKScene {
         sendData(touch: touch, type: StickType.Left)
     }
 
+    /**
+     Process a touch using the right joystick's settings
+
+     - Parameter touch: A JoystickTouch
+     */
     func processRightStick(touch: JoystickTouch) {
         rightStick.removeAllActions()
         rightStick.position = touch.location
@@ -193,18 +234,26 @@ class JoystickSKScene: SKScene {
         sendData(touch: touch, type: StickType.Right)
     }
 
+    /// Reset all joysticks
     func resetJoysticks() {
         resetStick(type: StickType.All)
     }
 
+    /// Reset the left joystick
     func resetLeftStick() {
         resetStick(type: StickType.Left)
     }
 
+    /// Reset the right joystick
     func resetRightStick() {
         resetStick(type: StickType.Right)
     }
 
+    /**
+     Reset a joystick
+
+     - Parameter type: A StickType for the desired joystick
+     */
     private func resetStick(type: StickType) {
 
         let duration = 0.085
@@ -229,6 +278,7 @@ class JoystickSKScene: SKScene {
         }
     }
 
+    /// Reset all touches and joysticks
     func reset() {
         touchData.removeAll()
         resetJoysticks()
