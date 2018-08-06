@@ -19,8 +19,14 @@ import Starscream
 //    var topic: Int
 //}
 
-class ConfiguredViewController: UIViewController, NetworkManager, MotionManager {
-    static var focusNodes: [String] = []
+class ConfiguredViewController: UIViewController, NetworkManager, MotionManager, OpenSpaceManager {
+
+    // MARK: OpenSpaceManager protocol
+    var focusNodes: [String : String?]?
+
+    func focusNodes(_ nodes: [String : String?]?) {
+        focusNodes = nodes
+    }
 
     // MARK: NetworkManager protocol
     var networkManager: WebsocketManager?
@@ -81,8 +87,8 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager 
         if let destination = segue.destination as? MotionManager {
             destination.motionManager(motionManager)
         }
-        if let destination = segue.destination as? ConfiguredViewController {
-            // Send configuration along
+        if let destination = segue.destination as? OpenSpaceManager {
+            destination.focusNodes(focusNodes)
         }
     }
 
@@ -96,8 +102,6 @@ extension ConfiguredViewController: WebSocketDelegate {
 
     func websocketDidConnect(socket: WebSocketClient) {
         print("Connected")
-//        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
-//                                                              payload: OpenSpaceNavigationPayload(type: "connect")))
 
         let payload = OpenSpacePayload(type: .connect)
         let data = OpenSpaceData(topic: 1, payload: payload)
@@ -109,16 +113,19 @@ extension ConfiguredViewController: WebSocketDelegate {
     }
 
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("Message received: \(text)")
-//        guard let json = try? WebsocketManager.decoder.decode(OpenSpaceTopic.self, from: text.data(using: .utf8)!) else {
-//            print("Doink")
-//            print(text.data(using: .utf8)!)
-//            return
-//        }
-//        print(json.payload)
+        guard let json = try? WebsocketManager.decoder.decode(OpenSpaceData.self, from: text.data(using: .utf8)!) else {
+            print("Could not decode message received from OpenSpace: \(text)")
+            return
+        }
 
-        if (text.contains("disconnect")) {
+        // Handle the different payload types
+        if let connectPayload = json.payload.connect {
+            focusNodes = connectPayload.focusNodes
+        }
+
+        if let _ = json.payload.disconnect {
             networkManager?.disconnect()
+            print("Disconneting...now!")
         }
     }
 

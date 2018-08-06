@@ -164,6 +164,7 @@ struct OpenSpacePayload: Codable {
     var type: PayloadType = .none
     var connect: OpenSpaceConnect? = nil
     var inputState: OpenSpaceInputState? = nil
+    var disconnect: OpenSpaceDisconnect? = nil
 
     init(type: PayloadType) {
         self.type = type
@@ -227,6 +228,10 @@ struct OpenSpaceData: Codable {
 
 struct OpenSpaceConnect: Codable {
     var focusNodes: [String:String]? = nil
+}
+
+struct OpenSpaceDisconnect: Codable {
+    var success: Bool? = nil
 }
 
 

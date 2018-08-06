@@ -162,8 +162,6 @@ class JoystickSKScene: SKScene {
         guard let socket = jsDelegate.networkManager?.socket else { return }
 
         if socket.isConnected {
-
-            //var payload = OpenSpaceNavigationPayload()
             var values: [String: Double?] = [:]
 
             // Handle joystick location
@@ -210,7 +208,6 @@ class JoystickSKScene: SKScene {
                 jsDelegate.networkManager?.write(data: data)
             }
         }
-
     }
 
     // MARK: Stick handling
