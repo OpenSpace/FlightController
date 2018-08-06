@@ -38,13 +38,7 @@ class ViewController: ConfiguredViewController {
         let host = (socketHost.text ?? "").isEmpty ? socketHost.placeholder : socketHost.text
 
         networkManager?.addSocket(host: host!)
-        if (!(networkManager?.connect())!) {
-            return
-        }
-
-        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
-            payload: OpenSpaceNavigationPayload(type: "connect")))
-
+        networkManager?.connect()
     }
 
     @IBAction
