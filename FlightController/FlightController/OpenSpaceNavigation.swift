@@ -9,7 +9,7 @@
 import UIKit
 
 /// The motions available in OpenSpace mapped to their JSON object names
-enum OpenSpaceMotions:String {
+enum OpenSpaceMotions:String, Codable {
     case OrbitX = "orbitX"
     case OrbitY = "orbitY"
     case ZoomIn = "zoomIn"
@@ -152,6 +152,84 @@ struct OpenSpaceAxisConfiguration {
 
 }
 
+struct OpenSpacePayload: Codable {
+
+    enum PayloadType: String, Codable {
+        case none
+        case inputState
+        case connect
+        case disconnect
+    }
+
+    var type: PayloadType = .none
+    var connect: OpenSpaceConnect? = nil
+    var inputState: OpenSpaceInputState? = nil
+
+    init(type: PayloadType) {
+        self.type = type
+    }
+
+    init(inputState: OpenSpaceInputState) {
+        type = .inputState
+        self.inputState = inputState
+    }
+}
+
+struct OpenSpaceInputState: Codable {
+
+    var values: [String: Double?] = [:]
+
+    init(values: [String: Double?]) {
+        self.values = values
+    }
+
+    func isEmpty() -> Bool {
+        for (_, value) in values {
+            if value != nil && value! != 0.0 {
+                return false
+            }
+        }
+        return true
+    }
+
+    subscript(index: OpenSpaceMotions) -> Double? {
+        get {
+            return values[index.rawValue]!
+        }
+        set (newValue) {
+            values[index.rawValue] = newValue
+        }
+    }
+
+    subscript(index: String) -> Double? {
+        get {
+            guard let i = OpenSpaceMotions(rawValue: index) else {
+                print("Cannot convert \(index) to an OpenSpaceMotion")
+                return nil
+            }
+            return values[i.rawValue]!
+        }
+        set (newValue) {
+            guard let i = OpenSpaceMotions(rawValue: index) else {
+                print("Cannot convert \(index) to an OpenSpaceMotion")
+                return
+            }
+            values[i.rawValue] = newValue
+        }
+    }
+}
+
+struct OpenSpaceData: Codable {
+    let type: String = "flightcontroller"
+    var topic: Int
+    var payload: OpenSpacePayload
+}
+
+struct OpenSpaceConnect: Codable {
+    var focusNodes: [String:String]? = nil
+}
+
+
 struct OpenSpaceNavigationSocket: Codable {
     static var threshold: Double = 0.3
     var topic: Int
@@ -192,44 +270,6 @@ struct OpenSpaceNavigationPayload: Codable {
 
     init(type: String) {
         self.type = type
-    }
-
-    mutating func threshold(t: Double) {
-        if orbitX != nil && abs(orbitX!) < t { orbitX = nil}
-        if orbitY != nil && abs(orbitY!) < t { orbitY = nil}
-        if panX != nil && abs(panX!) < t { panX = nil}
-        if panY != nil && abs(panY!) < t { panY = nil}
-        if globalRollX != nil && abs(globalRollX!) < t { globalRollX = nil}
-        if globalRollY != nil && abs(globalRollY!) < t { globalRollY = nil}
-        if localRollX != nil && abs(localRollX!) < t { localRollX = nil}
-        if localRollY != nil && abs(localRollY!) < t { localRollY = nil}
-        if zoomIn != nil && abs(zoomIn!) < t { zoomIn = nil}
-        if zoomOut != nil && abs(zoomOut!) < t { zoomOut = nil}
-    }
-
-    mutating func remap(low: Double, high: Double)
-    {
-        if orbitX != nil && orbitX! > 0 { orbitX = high}
-        if orbitY != nil && orbitY! > 0 { orbitY = high}
-        if panX != nil && panX! > 0 { panX = high}
-        if panY != nil && panY! > 0 { panY = high}
-        if globalRollX != nil && globalRollX! > 0 { globalRollX = high}
-        if globalRollY != nil && globalRollY! > 0 { globalRollY = high}
-        if localRollX != nil && localRollX! > 0 { localRollX = high}
-        if localRollY != nil && localRollY! > 0 { localRollY = high}
-        if zoomIn != nil && zoomIn! > 0 { zoomIn = high}
-        if zoomOut != nil && zoomOut! > 0 { zoomOut = high}
-
-        if orbitX != nil && orbitX! < 0 { orbitX = low}
-        if orbitY != nil && orbitY! < 0 { orbitY = low}
-        if panX != nil && panX! < 0 { panX = low}
-        if panY != nil && panY! < 0 { panY = low}
-        if globalRollX != nil && globalRollX! < 0 { globalRollX = low}
-        if globalRollY != nil && globalRollY! < 0 { globalRollY = low}
-        if localRollX != nil && localRollX! < 0 { localRollX = low}
-        if localRollY != nil && localRollY! < 0 { localRollY = low}
-        if zoomIn != nil && zoomIn! < 0 { zoomIn = low}
-        if zoomOut != nil && zoomOut! < 0 { zoomOut = low}
     }
 
     func isEmpty() -> Bool {

@@ -163,21 +163,22 @@ class JoystickSKScene: SKScene {
 
         if socket.isConnected {
 
-            var payload = OpenSpaceNavigationPayload()
+            //var payload = OpenSpaceNavigationPayload()
+            var values: [String: Double?] = [:]
 
             // Handle joystick location
             switch type {
             case StickType.Left:
                 let xAxis = config.axisMapping[AXIS.StickLeftX]!
                 let yAxis = config.axisMapping[AXIS.StickLeftY]!
-                payload[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
-                payload[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
+                values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             case StickType.Right:
                 let xAxis = config.axisMapping[AXIS.StickRightX]!
                 let yAxis = config.axisMapping[AXIS.StickRightY]!
-                payload[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
-                payload[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
+                values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             default:
                 break
@@ -190,7 +191,7 @@ class JoystickSKScene: SKScene {
                     case StickType.Left:
                         if let roll = del.currentAttitude?.roll {
                             let rollAxis = config.axisMapping[AXIS.LeftRoll]!
-                            payload[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
+                            values[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
                         }
                         break
                     case StickType.Right:
@@ -201,8 +202,12 @@ class JoystickSKScene: SKScene {
                 }
             }
 
-            if(!payload.isEmpty()) {
-                jsDelegate.networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
+            let inputState = OpenSpaceInputState(values: values)
+            if(!inputState.isEmpty()) {
+
+                let payload = OpenSpacePayload(inputState: inputState)
+                let data = OpenSpaceData(topic: 1, payload: payload)
+                jsDelegate.networkManager?.write(data: data)
             }
         }
 

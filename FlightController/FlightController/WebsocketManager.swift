@@ -33,7 +33,7 @@ final class WebsocketManager {
         socket?.disconnect()
     }
 
-    func write(data: OpenSpaceNavigationSocket) {
+    func write(data: OpenSpaceData) {
         guard let data = try? WebsocketManager.encoder.encode(data) else {
             return
         }

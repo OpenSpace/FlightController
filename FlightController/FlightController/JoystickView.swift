@@ -145,36 +145,36 @@ class JoystickView: UIView, NetworkManager {
 
 
     func sendData(touch: JoystickTouch, type: StickType) {
-        guard let socket = networkManager?.socket else { return }
-
-        if socket.isConnected {
-            let distance = touch.distance
-
-            let r = distance
-            let dx = Double(r.x)
-            let dy = Double(r.y)
-
-            var payload = OpenSpaceNavigationPayload()
-
-            switch type {
-            case StickType.Left:
-                payload.globalRollX = -dx
-                payload.zoomOut = dy
-                break
-            case StickType.Right:
-                payload.orbitX = dx
-                payload.orbitY = dy
-                break
-            default:
-                break
-            }
-            //payload.threshold(t: 0.005)
-
-            if(!payload.isEmpty()) {
-                //payload.remap(low: -0.07, high: 0.07)
-                networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
-            }
-        }
+//        guard let socket = networkManager?.socket else { return }
+//
+//        if socket.isConnected {
+//            let distance = touch.distance
+//
+//            let r = distance
+//            let dx = Double(r.x)
+//            let dy = Double(r.y)
+//
+//            var payload = OpenSpaceNavigationPayload()
+//
+//            switch type {
+//            case StickType.Left:
+//                payload.globalRollX = -dx
+//                payload.zoomOut = dy
+//                break
+//            case StickType.Right:
+//                payload.orbitX = dx
+//                payload.orbitY = dy
+//                break
+//            default:
+//                break
+//            }
+//            //payload.threshold(t: 0.005)
+//
+//            if(!payload.isEmpty()) {
+//                //payload.remap(low: -0.07, high: 0.07)
+//                networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
+//            }
+//        }
 
     }
 

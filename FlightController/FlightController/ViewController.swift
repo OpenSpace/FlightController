@@ -43,8 +43,8 @@ class ViewController: ConfiguredViewController {
 
     @IBAction
     func disconnectSocket() {
-        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
-            payload: OpenSpaceNavigationPayload(type: "disconnect")))
-        networkManager?.disconnect()
+//        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
+//            payload: OpenSpaceNavigationPayload(type: "disconnect")))
+        networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(type: .disconnect)))
     }
 }

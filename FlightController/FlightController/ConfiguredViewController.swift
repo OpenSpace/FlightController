@@ -96,9 +96,12 @@ extension ConfiguredViewController: WebSocketDelegate {
 
     func websocketDidConnect(socket: WebSocketClient) {
         print("Connected")
-        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
-                                                              payload: OpenSpaceNavigationPayload(type: "connect")))
+//        networkManager?.write(data: OpenSpaceNavigationSocket(topic:1,
+//                                                              payload: OpenSpaceNavigationPayload(type: "connect")))
 
+        let payload = OpenSpacePayload(type: .connect)
+        let data = OpenSpaceData(topic: 1, payload: payload)
+        networkManager?.write(data: data)
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
@@ -113,6 +116,10 @@ extension ConfiguredViewController: WebSocketDelegate {
 //            return
 //        }
 //        print(json.payload)
+
+        if (text.contains("disconnect")) {
+            networkManager?.disconnect()
+        }
     }
 
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
