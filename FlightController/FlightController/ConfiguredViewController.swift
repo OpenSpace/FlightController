@@ -21,16 +21,19 @@ import Starscream
 
 class ConfiguredViewController: UIViewController, NetworkManager, MotionManager, OpenSpaceManager {
 
+    static var interestingCallback: Double = 8.0
     var somethingInteresting: OpenSpaceInputState = OpenSpaceInputState(
-        values: ["orbitX", 0.0001])
+        values: ["orbitX": 0.0015])
 
     // MARK: OpenSpaceManager protocol
     var focusNodes: [String : String?]?
-    var allNodes: [String : String?]?
-
     var focusNodeNames: [String]?
+
+    var allNodes: [String : String?]?
     var allNodeNames: [String]?
-    
+
+    var lastInteractionTime: Date?
+
     func focusNodes(_ nodes: [String : String?]?) {
         focusNodes = nodes
         focusNodeNames = focusNodes?.keys.sorted {
@@ -43,6 +46,10 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
         allNodeNames = allNodes?.keys.sorted {
             return $0 < $1
             } ?? []
+    }
+
+    func lastInteractionTime(_ date: Date?) {
+        lastInteractionTime = date
     }
 
     // MARK: NetworkManager protocol
@@ -107,16 +114,24 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
         if let destination = segue.destination as? OpenSpaceManager {
             destination.focusNodes(focusNodes)
             destination.allNodes(allNodes)
+            destination.lastInteractionTime(lastInteractionTime)
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         networkManager?.delegate = self
+        if lastInteractionTime == nil {
+            lastInteractionTime = Date()
+        }
     }
 
     func doSomethingInteresting() {
         networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(inputState: somethingInteresting)))
+    }
+
+    func shouldDoSomethingInteresting() -> Bool {
+        return ((lastInteractionTime?.timeIntervalSinceNow)?.isLess(than: -ConfiguredViewController.interestingCallback))!
     }
 }
 

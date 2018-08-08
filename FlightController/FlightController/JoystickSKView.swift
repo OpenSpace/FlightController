@@ -33,6 +33,9 @@ extension JoystickSKViewController: SKSceneDelegate {
         if let joystickScene = scene as? JoystickSKScene {
             if (!joystickScene.touchData.isEmpty) {
                 handleTouches(joystickScene)
+                lastInteractionTime = Date()
+            } else if shouldDoSomethingInteresting() {
+                doSomethingInteresting()
             }
         }
     }
