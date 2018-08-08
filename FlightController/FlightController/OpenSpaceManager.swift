@@ -11,6 +11,11 @@ import Foundation
 protocol OpenSpaceManager {
     /// A list of the focus nodes
     var focusNodes: [String: String?]? { get set }
+    var allNodes: [String: String?]? { get set }
 
     func focusNodes(_ nodes: [String: String?]?)
+    func allNodes(_ nodes: [String: String?]?)
+
+    var focusNodeNames: [String]? { get }
+    var allNodeNames: [String]? { get }
 }

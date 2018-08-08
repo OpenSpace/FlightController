@@ -21,11 +21,28 @@ import Starscream
 
 class ConfiguredViewController: UIViewController, NetworkManager, MotionManager, OpenSpaceManager {
 
+    var somethingInteresting: OpenSpaceInputState = OpenSpaceInputState(
+        values: ["orbitX", 0.0001])
+
     // MARK: OpenSpaceManager protocol
     var focusNodes: [String : String?]?
+    var allNodes: [String : String?]?
 
+    var focusNodeNames: [String]?
+    var allNodeNames: [String]?
+    
     func focusNodes(_ nodes: [String : String?]?) {
         focusNodes = nodes
+        focusNodeNames = focusNodes?.keys.sorted {
+            return $0 < $1
+            } ?? []
+    }
+
+    func allNodes(_ nodes: [String : String?]?) {
+        allNodes = nodes
+        allNodeNames = allNodes?.keys.sorted {
+            return $0 < $1
+            } ?? []
     }
 
     // MARK: NetworkManager protocol
@@ -89,12 +106,17 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
         }
         if let destination = segue.destination as? OpenSpaceManager {
             destination.focusNodes(focusNodes)
+            destination.allNodes(allNodes)
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         networkManager?.delegate = self
+    }
+
+    func doSomethingInteresting() {
+        networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(inputState: somethingInteresting)))
     }
 }
 
@@ -106,6 +128,7 @@ extension ConfiguredViewController: WebSocketDelegate {
         let payload = OpenSpacePayload(type: .connect)
         let data = OpenSpaceData(topic: 1, payload: payload)
         networkManager?.write(data: data)
+
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
@@ -121,6 +144,7 @@ extension ConfiguredViewController: WebSocketDelegate {
         // Handle the different payload types
         if let connectPayload = json.payload.connect {
             focusNodes = connectPayload.focusNodes
+            allNodes = connectPayload.allNodes
         }
 
         if let _ = json.payload.disconnect {

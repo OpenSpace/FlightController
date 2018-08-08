@@ -159,12 +159,14 @@ struct OpenSpacePayload: Codable {
         case inputState
         case connect
         case disconnect
+        case changeFocus
     }
 
     var type: PayloadType = .none
     var connect: OpenSpaceConnect? = nil
     var inputState: OpenSpaceInputState? = nil
     var disconnect: OpenSpaceDisconnect? = nil
+    var changeFocus: OpenSpaceFocus? = nil
 
     init(type: PayloadType) {
         self.type = type
@@ -174,6 +176,20 @@ struct OpenSpacePayload: Codable {
         type = .inputState
         self.inputState = inputState
     }
+
+    init(focusObject: OpenSpaceFocus) {
+        type = .changeFocus
+        changeFocus = focusObject
+    }
+
+    init(focusString: String) {
+        self.init(focusObject: OpenSpaceFocus(focus: focusString))
+    }
+}
+
+
+struct OpenSpaceFocus: Codable {
+    var focus: String = ""
 }
 
 struct OpenSpaceInputState: Codable {
@@ -228,6 +244,7 @@ struct OpenSpaceData: Codable {
 
 struct OpenSpaceConnect: Codable {
     var focusNodes: [String:String]? = nil
+    var allNodes: [String:String]? = nil
 }
 
 struct OpenSpaceDisconnect: Codable {
