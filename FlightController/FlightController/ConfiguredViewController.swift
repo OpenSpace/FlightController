@@ -126,6 +126,10 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
         }
     }
 
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return true
+    }
+
     func doSomethingInteresting() {
         networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(inputState: somethingInteresting)))
     }

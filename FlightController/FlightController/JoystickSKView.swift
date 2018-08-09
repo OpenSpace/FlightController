@@ -24,6 +24,14 @@ class JoystickSKViewController: ConfiguredViewController {
         let scene = JoystickSKScene(size: skView.bounds.size)
         scene.scaleMode = .resizeFill
         scene.delegate = self
+
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.UIScreenBrightnessDidChange,
+            object: nil,
+            queue: nil ) {
+                (_) in
+                scene.updateJoystickTintFactor(UIScreen.main.brightness * 0.8)
+        }
         skView.presentScene(scene)
     }
 }
@@ -88,7 +96,14 @@ class JoystickSKScene: SKScene {
 
     // MARK: SKScene overrides
     override func didMove(to view: SKView) {
+
+        let tint = UIColor.black
+        let factor = CGFloat(UIScreen.main.brightness * 0.80)
         backgroundColor = SKColor.black
+        leftStick.color = tint
+        rightStick.color = tint
+        updateJoystickTintFactor(factor)
+
         addChild(leftStick)
         addChild(rightStick)
         resetJoysticks()
@@ -287,5 +302,12 @@ class JoystickSKScene: SKScene {
     func reset() {
         touchData.removeAll()
         resetJoysticks()
+    }
+
+    func updateJoystickTintFactor(_ f: CGFloat) {
+        let col = SKAction.colorize(withColorBlendFactor: f, duration: 1.0
+        )
+        leftStick.run(col)
+        rightStick.run(col)
     }
 }
