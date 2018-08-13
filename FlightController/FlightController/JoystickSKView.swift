@@ -140,13 +140,6 @@ class JoystickSKScene: SKScene {
     }
 
     // MARK: Handle Touches
-
-    /**
-     Performas all actions associated with an active touch (began, moved, or
-     unmoved-but-active) The touch object may be altered to register new states.
-
-     - Parameter touch: The JoystickTouch to process (inout)
-     */
     func handleActiveStick(touch: inout JoystickTouch, inputState: inout OpenSpaceInputState) {
         let midX = size.width/2
         if let del = self.delegate as? MotionManager {
@@ -325,10 +318,9 @@ class JoystickSKScene: SKScene {
         case StickType.Right:
             rightStick.run(rightAction)
             break
-        case StickType.All:
+        default:
             leftStick.run(leftAction)
             rightStick.run(rightAction)
-            break
         }
     }
 

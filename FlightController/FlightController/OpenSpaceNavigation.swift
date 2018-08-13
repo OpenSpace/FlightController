@@ -34,6 +34,9 @@ enum ControllerAxes {
     case RightRoll
     case RightPitch
     case RightYaw
+    case BothRoll
+    case BothPitch
+    case BothYaw
 }
 
 /// Settings for an individual controller axis
@@ -148,6 +151,17 @@ struct OpenSpaceAxisConfiguration {
                            invert: false,
                            sensitivity: 0.1,
                            threshold: 0.05)
+        , ControllerAxes.BothYaw:
+            ControllerAxisSettings(motion: OpenSpaceMotions.LocalRollX,
+                            invert: false,
+                            sensitivity: 0.1,
+                            threshold: 0.05)
+        , ControllerAxes.BothRoll:
+            ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
+                            invert: false,
+                            sensitivity: 0.1,
+                            threshold: 0.05)
+
     ]
 
 }

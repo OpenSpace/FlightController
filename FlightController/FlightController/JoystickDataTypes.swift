@@ -40,6 +40,7 @@ enum StickType: String {
     case Left
     case Right
     case All
+    case None
 
     /// The value as a String
     var name: String {
@@ -92,6 +93,14 @@ struct JoystickTouch: Hashable {
     var height: CGFloat {
         return touch.view!.bounds.height
     }
+
+    /// The original view of the touch
+    var view: UIView {
+        return touch.view!
+    }
+
+    /// Which stick this touch is associated with
+    var stick: StickType = .None
 
     /// Initalize with a UITouch and a CGPoint starting location
     init(touch: UITouch, startLocation: CGPoint) {
