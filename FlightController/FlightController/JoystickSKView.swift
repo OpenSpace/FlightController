@@ -15,8 +15,13 @@ class JoystickSKViewController: ConfiguredViewController {
         return view as! SKView
     }
 
-    // MARK: UIViewController overrides
+    var messageQueue: [OpenSpacePayload] = []
+
+    // MARK: UIViewController overridesres
     override func viewDidLoad() {
+
+        super.viewDidLoad()
+
         skView.showsFPS = true
         skView.showsNodeCount = true
         skView.ignoresSiblingOrder = true
@@ -34,14 +39,33 @@ class JoystickSKViewController: ConfiguredViewController {
         }
         skView.presentScene(scene)
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
+    }
+
+    override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
+        return [.all]
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        if #available(iOS 11.0, *) {
+            return super.prefersStatusBarHidden
+        }
+        //return fullScreenMode || super.prefersStatusBarHidden
+        return super.prefersStatusBarHidden
+    }
 }
 
 extension JoystickSKViewController: SKSceneDelegate {
     func update(_ currentTime: TimeInterval, for scene: SKScene) {
         if let joystickScene = scene as? JoystickSKScene {
             if (!joystickScene.touchData.isEmpty) {
-                handleTouches(joystickScene)
                 lastInteractionTime = Date()
+                var inputState =  OpenSpaceInputState()
+                handleTouches(joystickScene, inputState: &inputState)
+                messageQueue.append(OpenSpacePayload(inputState: inputState))
             } else if shouldDoSomethingInteresting() {
                 doSomethingInteresting()
             }
@@ -52,14 +76,16 @@ extension JoystickSKViewController: SKSceneDelegate {
      Handle interaction with the scene. Let's the scene handle each touch
      individually, then manages the aggregate settings and motion
 
-     - Parameter scene: The active JoystickSKScene
+     - Parameters:
+        - scene: The active JoystickSKScene
      */
-    private func handleTouches(_ scene: JoystickSKScene) {
+    private func handleTouches(_ scene: JoystickSKScene, inputState: inout OpenSpaceInputState) {
 
+        var inputState = OpenSpaceInputState()
         // Must pop and replace to edit
         for d in scene.touchData {
             var tmpTouch = scene.touchData.remove(d)!
-            scene.handleActiveStick(touch: &tmpTouch)
+            scene.handleActiveStick(touch: &tmpTouch, inputState: &inputState)
             scene.touchData.update(with: tmpTouch)
         }
 
@@ -121,7 +147,7 @@ class JoystickSKScene: SKScene {
 
      - Parameter touch: The JoystickTouch to process (inout)
      */
-    func handleActiveStick(touch: inout JoystickTouch) {
+    func handleActiveStick(touch: inout JoystickTouch, inputState: inout OpenSpaceInputState) {
         let midX = size.width/2
         if let del = self.delegate as? MotionManager {
             if (touch.force < JoystickSKViewController.forceThreshold) {
@@ -167,6 +193,14 @@ class JoystickSKScene: SKScene {
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         reset()
+    }
+
+
+    /**
+     Enqueues a payload
+     */
+    private func queueInput(payload: OpenSpacePayload) {
+
     }
 
     /**

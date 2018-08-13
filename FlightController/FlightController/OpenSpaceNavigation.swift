@@ -196,6 +196,10 @@ struct OpenSpaceInputState: Codable {
 
     var values: [String: Double?] = [:]
 
+    init() {
+
+    }
+    
     init(values: [String: Double?]) {
         self.values = values
     }
@@ -232,6 +236,23 @@ struct OpenSpaceInputState: Codable {
                 return
             }
             values[i.rawValue] = newValue
+        }
+    }
+
+    /**
+     Merges the values of another OpenSpaceInputState into this instance. Optional value
+     overwrite determine whether existing values are kept or updated.
+
+     - Parameters:
+        - input: An OpenSpaceInputState to add to this object
+        - overwrite: Whether existing keys are overwritten by the input (default: false)
+     */
+    mutating func merge(_ input: OpenSpaceInputState, overwrite: Bool = false) {
+        for (key, value) in input.values {
+            if (values[key] != nil && !overwrite) {
+                continue
+            }
+            values[key] = value
         }
     }
 }
