@@ -10,113 +10,68 @@ import Foundation
 import UIKit
 import CoreMotion
 
-class JoystickTimerViewController: UIViewController, NetworkManager, MotionManager {
-    // MARK: NetworkManager protocol
-    var networkManager: WebsocketManager?
-
-    func networkManager(_ manager: WebsocketManager?) {
-        networkManager = manager
-    }
-
-    // MARK: MotionManager protocol
-    static var forceThreshold: CGFloat = 4.0
-
-    var motionManager: CMMotionManager?
-    var referenceAttitude: CMAttitude!
-    var currentAttitude: CMAttitude?
-
-    func motionManager(_ manager: CMMotionManager?) {
-        motionManager = manager
-    }
-
-    func referenceAttitude(_ reference: CMAttitude?) {
-        referenceAttitude = reference
-    }
-
-    func startUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionAvailable else {
-            return
-        }
-
-        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
-        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
-            guard let deviceMotion = deviceMotion else { return }
-
-            self.currentAttitude = deviceMotion.attitude
-
-            // Store the reference attitude when motion mode is engaged
-            if (self.referenceAttitude == nil) {
-                self.referenceAttitude = self.currentAttitude!.copy() as! CMAttitude
-            }
-
-            self.currentAttitude!.multiply(byInverseOf: self.referenceAttitude)
-        }
-    }
-
-    func stopUpdates() {
-        guard let motionManager = motionManager, motionManager.isDeviceMotionActive else { return }
-
-        // Release the reference attitude when motion disengaged
-        motionManager.stopDeviceMotionUpdates()
-        self.referenceAttitude = nil
-        self.currentAttitude = nil
-    }
+class JoystickTimerViewController: ConfiguredViewController {
 
     // MARK: Members
+
+    /// The Joystick image
     static let JoystickImage = UIImage(named: "Joystick")
-    static let refreshRate: TimeInterval = TimeInterval(1/10)
+
+    /// The sending rate
+    static let refreshRate: TimeInterval = TimeInterval(1/120)
+
+    /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
+
     var senderTimer: Timer?
+
+    /// The left joystick object
     let leftStick: UIImageView = UIImageView(image: JoystickImage)
+
+    /// The right joystick object
     let rightStick: UIImageView = UIImageView(image: JoystickImage)
+
+    /// Whether deep press was engaged but not yet released
     var hasForce: Bool = false
+
+    /// The configurations for the axes
+    var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
+
+    /// Convenience alias for ConrollerAxes
+    typealias AXIS = ControllerAxes
 
 
     // MARK: UIViewController overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         view.isMultipleTouchEnabled = true
+        leftStick.tintColor = UIColor.black.withAlphaComponent(0.8)
+        rightStick.tintColor = leftStick.tintColor
         view.addSubview(leftStick)
         view.addSubview(rightStick)
+        view.backgroundColor = UIColor.black
 
-        //senderTimer = Timer.scheduledTimer(timeInterval: JoystickTimerViewController.refreshRate, target: self, selector: #selector(handleTouches), userInfo: nil, repeats: true)
+        senderTimer = Timer.scheduledTimer(timeInterval: JoystickTimerViewController.refreshRate, target: self, selector: #selector(handleTouches), userInfo: nil, repeats: true)
 
-        senderTimer = Timer.scheduledTimer(withTimeInterval: JoystickTimerViewController.refreshRate, repeats: true, block: {_ in
-            if (!self.touchData.isEmpty) {
-                self.handleTouches()
-            }
-        })
+//        senderTimer = Timer.scheduledTimer(withTimeInterval: JoystickTimerViewController.refreshRate, repeats: true, block: {_ in
+//            if (!self.touchData.isEmpty) {
+//                self.handleTouches()
+//            }
+//        })
         resetJoysticks()
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? NetworkManager {
-            destination.networkManager(networkManager)
-        }
-        if let destination = segue.destination as? MotionManager {
-            destination.motionManager(motionManager)
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
     }
 
-//    // MARK: Handle Touches
-//    @objc func handleTouches() {
-//        // Must pop and replace to edit
-//        for d in touchData {
-//            var tmpTouch = touchData.remove(d)!
-//            handleActiveStick(touch: &tmpTouch)
-//            touchData.update(with: tmpTouch)
-//        }
-//
-//        if ((touchData.filter { $0.isDeep }).isEmpty) {
-//            hasForce = false
-//            stopUpdates()
-//        }
-//    }
-
+    override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
+        return [.all]
+    }
 
     // MARK: Handle Touches
-    func handleTouches() {
+    @objc func handleTouches() {
         // Must pop and replace to edit
         for d in touchData {
             var tmpTouch = touchData.remove(d)!
@@ -126,10 +81,32 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
 
         if ((touchData.filter { $0.isDeep }).isEmpty) {
             hasForce = false
-            stopUpdates()
+            stopMotionUpdates()
         }
     }
 
+
+//    // MARK: Handle Touches
+//    func handleTouches() {
+//        // Must pop and replace to edit
+//        for d in touchData {
+//            var tmpTouch = touchData.remove(d)!
+//            handleActiveStick(touch: &tmpTouch)
+//            touchData.update(with: tmpTouch)
+//        }
+//
+//        if ((touchData.filter { $0.isDeep }).isEmpty) {
+//            hasForce = false
+//            stopMotionUpdates()
+//        }
+//    }
+
+    /**
+     Performas all actions associated with an active touch (began, moved, or
+     unmoved-but-active) The touch object may be altered to register new states.
+
+     - Parameter touch: The JoystickTouch to process (inout)
+     */
     func handleActiveStick(touch: inout JoystickTouch) {
         let midX = (view.window?.bounds.midX)!
         if (touch.force < JoystickTimerViewController.forceThreshold) {
@@ -149,7 +126,7 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
         if (touch.isDeep) {
             if (!hasForce) {
                 hasForce = true
-                startUpdates()
+                startMotionUpdates()
             }
         }
         touch.startLocation.x < midX ? processLeftStick(touch: touch) : processRightStick(touch: touch)
@@ -176,26 +153,32 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
         reset()
     }
 
+    /**
+     Generates and sends the websocket payload to OpenSpace.
+
+     - Parameters:
+     - touch: A JoystickTouch object
+     - type: The StickType being handled
+     */
     func sendData(touch: JoystickTouch, type: StickType) {
         guard let socket = networkManager?.socket else { return }
 
         if socket.isConnected {
-
-            var payload = OpenSpaceNavigationPayload()
-
-            let r = touch.remap(value: touch.distance)
-            let dx = Double(r.x)
-            let dy = Double(r.y)
+            var values: [String: Double?] = [:]
 
             // Handle joystick location
             switch type {
             case StickType.Left:
-                payload.globalRollX = -dx
-                payload.zoomOut = dy
+                let xAxis = config.axisMapping[AXIS.StickLeftX]!
+                let yAxis = config.axisMapping[AXIS.StickLeftY]!
+                values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             case StickType.Right:
-                payload.orbitX = dx
-                payload.orbitY = dy
+                let xAxis = config.axisMapping[AXIS.StickRightX]!
+                let yAxis = config.axisMapping[AXIS.StickRightY]!
+                values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+                values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
                 break
             default:
                 break
@@ -205,9 +188,9 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
             if touch.isDeep {
                 switch type {
                 case StickType.Left:
-                    payload.panY = currentAttitude?.roll
-                    if (payload.panY != nil) {
-                        payload.panY! /= 10
+                    if let roll = currentAttitude?.roll {
+                        let rollAxis = config.axisMapping[AXIS.LeftRoll]!
+                        values[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
                     }
                     break
                 case StickType.Right:
@@ -217,39 +200,58 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
                 }
             }
 
-            //payload.threshold(t: 0.005)
+            let inputState = OpenSpaceInputState(values: values)
+            if(!inputState.isEmpty()) {
 
-            if(!payload.isEmpty()) {
-                //payload.remap(low: -0.07, high: 0.07)
-                networkManager?.write(data: OpenSpaceNavigationSocket(topic:1, payload: payload))
+                let payload = OpenSpacePayload(inputState: inputState)
+                let data = OpenSpaceData(topic: 1, payload: payload)
+                networkManager?.write(data: data)
             }
         }
-
     }
 
     // MARK: Stick handling
+
+    /**
+     Process a touch using the left joystick's settings
+
+     - Parameter touch: A JoystickTouch
+     */
     func processLeftStick(touch: JoystickTouch) {
         leftStick.center = touch.location
         sendData(touch: touch, type: StickType.Left)
     }
 
+    /**
+     Process a touch using the right joystick's settings
+
+     - Parameter touch: A JoystickTouch
+     */
     func processRightStick(touch: JoystickTouch) {
         rightStick.center = touch.location
         sendData(touch: touch, type: StickType.Right)
     }
 
+    /// Reset all joysticks
     func resetJoysticks() {
         resetStick(type: StickType.All)
     }
 
+    /// Reset the left joystick
     func resetLeftStick() {
         resetStick(type: StickType.Left)
     }
 
+    /// Reset the right joystick
     func resetRightStick() {
         resetStick(type: StickType.Right)
     }
 
+    /**
+     Reset a joystick
+
+     - Parameter type: A StickType for the desired joystick
+     */
     private func resetStick(type: StickType) {
         let duration = 0.085
         let damping = CGFloat(0.5)
@@ -294,4 +296,12 @@ class JoystickTimerViewController: UIViewController, NetworkManager, MotionManag
         touchData.removeAll()
         resetJoysticks()
     }
+
+    func updateJoystickTintFactor(_ f: CGFloat) {
+        let col = leftStick.tintColor.withAlphaComponent(f)
+
+        leftStick.tintColor = col
+        rightStick.tintColor = col
+    }
+
 }
