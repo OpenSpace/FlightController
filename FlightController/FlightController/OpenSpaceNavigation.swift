@@ -148,17 +148,17 @@ struct OpenSpaceAxisConfiguration {
                            threshold: 0.05)
         , ControllerAxes.LeftRoll:
             ControllerAxisSettings(motion: OpenSpaceMotions.PanY,
-                           invert: false,
+                           invert: true,
                            sensitivity: 0.1,
                            threshold: 0.05)
         , ControllerAxes.BothYaw:
-            ControllerAxisSettings(motion: OpenSpaceMotions.LocalRollX,
-                            invert: false,
+            ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
+                            invert: true,
                             sensitivity: 0.1,
                             threshold: 0.05)
         , ControllerAxes.BothRoll:
             ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
-                            invert: false,
+                            invert: true,
                             sensitivity: 0.1,
                             threshold: 0.05)
 

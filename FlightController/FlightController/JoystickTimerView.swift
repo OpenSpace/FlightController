@@ -18,7 +18,7 @@ class JoystickTimerViewController: ConfiguredViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/120)
+    static let refreshRate: TimeInterval = TimeInterval(1/30)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -38,7 +38,7 @@ class JoystickTimerViewController: ConfiguredViewController {
     var currentBank: Double = 0.0
 
     /// The degradation of the bank
-    var bankDegrade: Double = 0.1
+    var bankDegrade: Double = 0.05
 
     /// The configurations for the axes
     var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
@@ -100,7 +100,7 @@ class JoystickTimerViewController: ConfiguredViewController {
 
             // FIXME: This doesn't quite hit zero
             if (abs(currentBank) > bankDegrade) {
-                let motion = config.axisMapping[AXIS.BothYaw]!.motionName
+                let motion = OpenSpaceMotions.LocalRollX
                 var inputState = OpenSpaceInputState()
                 inputState[motion] = currentBank < 0.0 ? bankDegrade : -bankDegrade
                 state.merge(inputState)
@@ -141,6 +141,7 @@ class JoystickTimerViewController: ConfiguredViewController {
             let yawAxis = config.axisMapping[AXIS.BothYaw]!
             let b = yawAxis.attenuate(CGFloat(yaw))
             values[yawAxis.motionName] = b
+            values[OpenSpaceMotions.LocalRollX.rawValue] = b
             currentBank += b
         }
         if let roll = currentAttitude?.roll {
