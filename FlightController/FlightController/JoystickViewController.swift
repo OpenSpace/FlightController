@@ -16,7 +16,7 @@ class JoystickViewController: OpenSpaceViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/120)
+    static let refreshRate: TimeInterval = TimeInterval(1/60)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -40,8 +40,6 @@ class JoystickViewController: OpenSpaceViewController {
 
     /// The configurations for the axes
     var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
-
-    var runLoop = RunLoop.current
 
     /// Convenience alias for ConrollerAxes
     typealias AXIS = ControllerAxes
@@ -79,19 +77,18 @@ class JoystickViewController: OpenSpaceViewController {
         setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
 
         // Start a timer to send touch events from this view
-        let timer = senderTimer ?? Timer(timeInterval: JoystickViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
+        let timer = Timer(timeInterval: JoystickViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
 
-        runLoop.add(timer, forMode: .defaultRunLoopMode)
+        RunLoop.current.add(timer, forMode: .commonModes)
         timer.fire()
         senderTimer = timer
     }
 
     override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
-        return .bottom
+        return [.all]
     }
 
     // MARK: Handle Touches
-
     @objc func tick() {
         if (!touchData.isEmpty) {
             OpenSpaceManager.shared.lastInteractionTime = Date()

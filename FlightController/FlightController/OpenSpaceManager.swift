@@ -31,7 +31,7 @@ final class OpenSpaceManager {
     var lastInteractionTime: Date?
 
     /// Timeout before controller begins to doSomethingInteresting()
-    var interestingCallback: Double = 5.0
+    var interestingCallback: Double = 3.0
 
     /// Input state that defines what is done in doSomethingInteresting()
     var somethingInteresting: OpenSpaceInputState = OpenSpaceInputState(

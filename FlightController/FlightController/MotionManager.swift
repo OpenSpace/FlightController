@@ -26,6 +26,7 @@ final class MotionManager {
 
 
     private init() {
+        manager = CMMotionManager()
     }
     /**
      Set self.motionManager
