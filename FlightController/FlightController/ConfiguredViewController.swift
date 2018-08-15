@@ -21,9 +21,12 @@ import Starscream
 
 class ConfiguredViewController: UIViewController, NetworkManager, MotionManager, OpenSpaceManager {
 
-    static var interestingCallback: Double = 8.0
+    /// Timeout before controller begins to doSomethingInteresting()
+    static var interestingCallback: Double = 5.0
+
+    /// Input state that defines what is done in doSomethingInteresting()
     var somethingInteresting: OpenSpaceInputState = OpenSpaceInputState(
-        values: ["orbitX": 0.0015])
+        values: [OpenSpaceMotions.OrbitX.rawValue: 0.0015])
 
     // MARK: OpenSpaceManager protocol
     var focusNodes: [String : String?]?
@@ -120,6 +123,19 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        if let vc = self as? ViewController {
+            print("setting websocket delete to home screen");
+        }
+
+        if let vc = self as? JoystickTimerViewController {
+            print("setting websocket delete to joystiq screen");
+        }
+
+        if let vc = self as? MenuViewController {
+            print("setting websocket delete to menu screen");
+        }
+
         networkManager?.delegate = self
         if lastInteractionTime == nil {
             lastInteractionTime = Date()
@@ -130,12 +146,26 @@ class ConfiguredViewController: UIViewController, NetworkManager, MotionManager,
         return true
     }
 
+    /**
+     Do something interesting. Sends a payload with an input state, based on
+     **somethingInteresting**
+     */
     func doSomethingInteresting() {
+
+        if let vc = self as? ViewController {
+            print("send interesting from main vc");
+        }
+
+        if let vc = self as? JoystickTimerViewController {
+            print("send interesting from joytiq");
+        }
+
+
         networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(inputState: somethingInteresting)))
     }
 
-    func shouldDoSomethingInteresting() -> Bool {
-        return ((lastInteractionTime?.timeIntervalSinceNow)?.isLess(than: -ConfiguredViewController.interestingCallback))!
+    var shouldDoSomethingInteresting: Bool {
+        return (networkManager?.socket?.isConnected)! && ((lastInteractionTime?.timeIntervalSinceNow)?.isLess(than: -ConfiguredViewController.interestingCallback))!
     }
 }
 
@@ -166,9 +196,15 @@ extension ConfiguredViewController: WebSocketDelegate {
             allNodes = connectPayload.allNodes
         }
 
+        if let vc = self as? MenuViewController {
+            vc.allPicker.reloadAllComponents()
+            vc.focusPicker.reloadAllComponents()
+        }
+
+
         if let _ = json.payload.disconnect {
             networkManager?.disconnect()
-            print("Disconneting...now!")
+            print("Disconnecting...now!")
         }
     }
 

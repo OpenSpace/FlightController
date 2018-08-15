@@ -74,7 +74,8 @@ struct ControllerAxisSettings {
 
     func attenuate(_ value: CGFloat) -> Double {
         let f = Float(value)
-        return abs(f) < threshold ? 0.0 : Double(f * self.multiplier)
+        let t = f > 0 ? -threshold : threshold
+        return abs(f) < threshold ? 0.0 : Double(f * self.multiplier) + Double(t)
     }
 
     /**
@@ -94,7 +95,8 @@ struct ControllerAxisSettings {
 
         let offset = value/max
 
-        return abs(value/max) < CGFloat(threshold) ? 0.0 : Double(value * CGFloat(self.multiplier))
+        let t = offset > 0 ? -threshold : threshold
+        return abs(value/max) < CGFloat(threshold) ? 0.0 : Double(value * CGFloat(self.multiplier)) + Double(t)
     }
 
     /// Init passing all values
@@ -138,12 +140,12 @@ struct OpenSpaceAxisConfiguration {
                            threshold: 0.05)
         , ControllerAxes.StickRightX:
             ControllerAxisSettings(motion: OpenSpaceMotions.OrbitX,
-                           invert: false,
+                           invert: true,
                            sensitivity: 0.001,
                            threshold: 0.05)
         , ControllerAxes.StickRightY:
             ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
-                           invert: false,
+                           invert: true,
                            sensitivity: 0.001,
                            threshold: 0.05)
         , ControllerAxes.LeftRoll:

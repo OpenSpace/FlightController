@@ -18,7 +18,7 @@ class JoystickTimerViewController: ConfiguredViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/30)
+    static let refreshRate: TimeInterval = TimeInterval(1/60)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -57,31 +57,54 @@ class JoystickTimerViewController: ConfiguredViewController {
         view.addSubview(leftStick)
         view.addSubview(rightStick)
         view.backgroundColor = UIColor.black
-
-        senderTimer = Timer.scheduledTimer(timeInterval: JoystickTimerViewController.refreshRate, target: self, selector: #selector(handleTouches), userInfo: nil, repeats: true)
         resetJoysticks()
 
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name.UIScreenBrightnessDidChange,
-            object: nil,
-            queue: nil ) {
-                (_) in
-                self.updateJoystickTintFactor(1.0 - UIScreen.main.brightness * 0.8)
-        }
+//            NotificationCenter.default.addObserver(
+//                forName: NSNotification.Name.UIScreenBrightnessDidChange,
+//                object: nil,
+//                queue: nil ) {
+//                    (_) in
+//                    self.updateJoystickTintFactor(1.0 - UIScreen.main.brightness * 0.8)
+//            }
+    }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        senderTimer?.invalidate()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        senderTimer = Timer(timeInterval: JoystickTimerViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
+
+        if let timer = senderTimer {
+            RunLoop.main.add(timer, forMode: .defaultRunLoopMode)
+            timer.fire()
+        }
+
         setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
     }
 
     override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
-        return [.all]
+        return .bottom
     }
 
     // MARK: Handle Touches
-    @objc func handleTouches() {
+
+    @objc func tick() {
+        if (!touchData.isEmpty) {
+            lastInteractionTime = Date()
+            handleTouches()
+//        }
+        } else {
+            if shouldDoSomethingInteresting {
+                doSomethingInteresting()
+            }
+        }
+//        print(Date().timeIntervalSinceReferenceDate)
+    }
+
+    func handleTouches() {
         // Must pop and replace to edit
         var leftIsDeep = false
         var rightIsDeep = false
@@ -179,6 +202,7 @@ class JoystickTimerViewController: ConfiguredViewController {
             if (!hasForce) {
                 hasForce = true
                 startMotionUpdates()
+                print("starting motion");
             }
         }
     }

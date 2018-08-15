@@ -66,7 +66,7 @@ extension JoystickSKViewController: SKSceneDelegate {
                 var inputState =  OpenSpaceInputState()
                 handleTouches(joystickScene, inputState: &inputState)
                 messageQueue.append(OpenSpacePayload(inputState: inputState))
-            } else if shouldDoSomethingInteresting() {
+            } else if shouldDoSomethingInteresting {
                 doSomethingInteresting()
             }
         }

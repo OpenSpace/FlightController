@@ -34,9 +34,21 @@ final class WebsocketManager {
     }
 
     func write(data: OpenSpaceData) {
+        guard let socket = self.socket else {
+            return
+        }
+
+        if !socket.isConnected  {
+            return
+        }
+
         guard let data = try? WebsocketManager.encoder.encode(data) else {
             return
         }
-        socket?.write(string: String(data: data, encoding: .utf8)!)
+
+        guard let packet = String(data: data, encoding: .utf8) else {
+            return
+        }
+        socket.write(string: packet)
     }
 }
