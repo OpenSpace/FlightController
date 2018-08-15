@@ -7,47 +7,6 @@
 //
 
 import UIKit
-import CoreMotion
 
-class NavigationViewController: UINavigationController, NetworkManager, MotionManager {
-    // MARK: NetworkManager protocol
-    var networkManager: WebsocketManager?
-
-    func networkManager(_ manager: WebsocketManager?) {
-        networkManager = manager
-    }
-
-    // MARK: MotionManager protocol
-    var motionManager: CMMotionManager?
-    var referenceAttitude: CMAttitude!
-    var currentAttitude: CMAttitude?
-    static var forceThreshold: CGFloat = 4.0
-
-    func motionManager(_ manager: CMMotionManager?) {
-        motionManager = manager
-    }
-
-    func referenceAttitude(_ reference: CMAttitude?) {
-        referenceAttitude = reference
-    }
-
-    func startMotionUpdates() {
-        return
-    }
-
-    func stopMotionUpdates() {
-        return
-    }
-
-    // MARK: UIViewController overrides
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let viewController = topViewController as? MotionManager {
-            viewController.motionManager(motionManager)
-
-        }
-        if let viewController = topViewController as? NetworkManager {
-            viewController.networkManager(networkManager)
-        }
-    }
+class NavigationViewController: UINavigationController {
 }

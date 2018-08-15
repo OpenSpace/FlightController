@@ -1,16 +1,14 @@
 //
-//  JoystickTimerView.swift
+//  JoystickViewController.swift
 //  FlightController
 //
 //  Created by Matthew Territo on 7/30/18.
 //  Copyright © 2018 OpenSpace. All rights reserved.
 //
 
-import Foundation
 import UIKit
-import CoreMotion
 
-class JoystickTimerViewController: ConfiguredViewController {
+class JoystickViewController: OpenSpaceViewController {
 
     // MARK: Members
 
@@ -18,7 +16,7 @@ class JoystickTimerViewController: ConfiguredViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/60)
+    static let refreshRate: TimeInterval = TimeInterval(1/120)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -43,6 +41,8 @@ class JoystickTimerViewController: ConfiguredViewController {
     /// The configurations for the axes
     var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
 
+    var runLoop = RunLoop.current
+
     /// Convenience alias for ConrollerAxes
     typealias AXIS = ControllerAxes
 
@@ -51,7 +51,7 @@ class JoystickTimerViewController: ConfiguredViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.isMultipleTouchEnabled = true
-        JoystickTimerViewController.JoystickImage?.withRenderingMode(.alwaysTemplate)
+        JoystickViewController.JoystickImage?.withRenderingMode(.alwaysTemplate)
         leftStick.tintColor = UIColor.black.withAlphaComponent(0.2)
         rightStick.tintColor = leftStick.tintColor
         view.addSubview(leftStick)
@@ -69,20 +69,21 @@ class JoystickTimerViewController: ConfiguredViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         senderTimer?.invalidate()
+        super.viewWillDisappear(animated)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        senderTimer = Timer(timeInterval: JoystickTimerViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
-
-        if let timer = senderTimer {
-            RunLoop.main.add(timer, forMode: .defaultRunLoopMode)
-            timer.fire()
-        }
 
         setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
+
+        // Start a timer to send touch events from this view
+        let timer = senderTimer ?? Timer(timeInterval: JoystickViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
+
+        runLoop.add(timer, forMode: .defaultRunLoopMode)
+        timer.fire()
+        senderTimer = timer
     }
 
     override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
@@ -93,15 +94,11 @@ class JoystickTimerViewController: ConfiguredViewController {
 
     @objc func tick() {
         if (!touchData.isEmpty) {
-            lastInteractionTime = Date()
+            OpenSpaceManager.shared.lastInteractionTime = Date()
             handleTouches()
-//        }
-        } else {
-            if shouldDoSomethingInteresting {
-                doSomethingInteresting()
-            }
+        } else if OpenSpaceManager.shared.shouldDoSomethingInteresting {
+            doSomethingInteresting()
         }
-//        print(Date().timeIntervalSinceReferenceDate)
     }
 
     func handleTouches() {
@@ -154,28 +151,34 @@ class JoystickTimerViewController: ConfiguredViewController {
 
         if ((touchData.filter { $0.isDeep }).isEmpty) {
             hasForce = false
-            stopMotionUpdates()
+            MotionManager.shared.stopMotionUpdates()
         }
     }
 
     func processFlight() -> OpenSpaceInputState {
-        var values: [String: Double?] = [:]
-        if let yaw = currentAttitude?.yaw {
-            let yawAxis = config.axisMapping[AXIS.BothYaw]!
-            let b = yawAxis.attenuate(CGFloat(yaw))
-            values[yawAxis.motionName] = b
-            values[OpenSpaceMotions.LocalRollX.rawValue] = b
-            currentBank += b
+
+        var inputState = OpenSpaceInputState()
+
+        guard let attitude = MotionManager.shared.currentAttitude else {
+            return inputState
         }
-        if let roll = currentAttitude?.roll {
-            let rollAxis = config.axisMapping[AXIS.BothRoll]!
-            values[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
-        }
-        return OpenSpaceInputState(values: values)
+
+        // Handle Yaw/Banking
+        let yawAxis = config.axisMapping[AXIS.BothYaw]!
+        let yaw = yawAxis.attenuate(CGFloat(attitude.yaw))
+        inputState[yawAxis.motion!] = yaw
+        inputState[OpenSpaceMotions.LocalRollX] = yaw
+        currentBank += yaw
+
+        // Handle Roll/Forward motion
+        let rollAxis = config.axisMapping[AXIS.BothRoll]!
+        inputState[rollAxis.motion!] = rollAxis.attenuate(CGFloat(attitude.roll))
+
+        return inputState
     }
 
     /**
-     Performas all actions associated with an active touch (began, moved, or
+     Performs all actions associated with an active touch (began, moved, or
      unmoved-but-active) The touch object may be altered to register new states.
 
      - Parameter touch: The JoystickTouch to process (inout)
@@ -184,7 +187,7 @@ class JoystickTimerViewController: ConfiguredViewController {
         let midX = (touch.view.window?.bounds.midX)!
         touch.stick = touch.startLocation.x < midX ? .Left : .Right
 
-        if (touch.force < JoystickTimerViewController.forceThreshold) {
+        if (touch.force < MotionManager.shared.forceThreshold) {
             if (!touch.wasDeep) {
                 touch.isDeep = false
             }
@@ -201,7 +204,7 @@ class JoystickTimerViewController: ConfiguredViewController {
         if (touch.isDeep) {
             if (!hasForce) {
                 hasForce = true
-                startMotionUpdates()
+                MotionManager.shared.startMotionUpdates()
                 print("starting motion");
             }
         }
@@ -228,29 +231,40 @@ class JoystickTimerViewController: ConfiguredViewController {
         reset()
     }
 
+    func sendData(state: OpenSpaceInputState) {
+        if NetworkManager.shared.isConnected {
+            let payload = OpenSpacePayload(inputState: state)
+            let data = OpenSpaceData(topic: 1, payload: payload)
+            NetworkManager.shared.write(data: data)
+        }
+    }
+
+    // MARK: Stick handling
+
     /**
-     Generates and sends the websocket payload to OpenSpace.
+     Generates the input state data from a joystick
 
      - Parameters:
      - touch: A JoystickTouch object
      - type: The StickType being handled
      */
     func getInputData(touch: JoystickTouch, type: StickType) -> OpenSpaceInputState {
-        var values: [String: Double?] = [:]
+
+        var inputState = OpenSpaceInputState()
 
         // Handle joystick location
         switch type {
         case StickType.Left:
             let xAxis = config.axisMapping[AXIS.StickLeftX]!
             let yAxis = config.axisMapping[AXIS.StickLeftY]!
-            values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
-            values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
+            inputState[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+            inputState[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
             break
         case StickType.Right:
             let xAxis = config.axisMapping[AXIS.StickRightX]!
             let yAxis = config.axisMapping[AXIS.StickRightY]!
-            values[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
-            values[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
+            inputState[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+            inputState[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
             break
         default:
             break
@@ -260,9 +274,9 @@ class JoystickTimerViewController: ConfiguredViewController {
         if touch.isDeep {
             switch type {
             case StickType.Left:
-                if let roll = currentAttitude?.roll {
+                if let attitude = MotionManager.shared.currentAttitude {
                     let rollAxis = config.axisMapping[AXIS.LeftRoll]!
-                    values[rollAxis.motionName] = rollAxis.attenuate(CGFloat(roll))
+                    inputState[rollAxis.motionName] = rollAxis.attenuate(CGFloat(attitude.roll))
                 }
                 break
             case StickType.Right:
@@ -271,24 +285,8 @@ class JoystickTimerViewController: ConfiguredViewController {
                 break
             }
         }
-        return OpenSpaceInputState(values: values)
-//        let inputState = OpenSpaceInputState(values: values)
-//        if(!inputState.isEmpty()) {
-//            sendData(state: inputState)
-//        }
+        return inputState
     }
-
-    func sendData(state: OpenSpaceInputState) {
-        guard let socket = networkManager?.socket else { return }
-
-        if socket.isConnected {
-            let payload = OpenSpacePayload(inputState: state)
-            let data = OpenSpaceData(topic: 1, payload: payload)
-            networkManager?.write(data: data)
-        }
-    }
-
-    // MARK: Stick handling
 
     /**
      Process a touch using the left joystick's settings
@@ -357,10 +355,6 @@ class JoystickTimerViewController: ConfiguredViewController {
             leftAnimation.startAnimation()
             break
         case StickType.Right:
-            rightAnimation.startAnimation()
-            break
-        case StickType.All:
-            leftAnimation.startAnimation()
             rightAnimation.startAnimation()
             break
         default:

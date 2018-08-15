@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import Foundation
 
-class MenuViewController: ConfiguredViewController {
+class MenuViewController: OpenSpaceViewController {
     @IBOutlet weak var focusPicker: UIPickerView!
     @IBOutlet weak var allPicker: UIPickerView!
     // MARK: UIViewController overrides
@@ -36,16 +35,8 @@ class MenuViewController: ConfiguredViewController {
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
     func changeFocus(name: String) {
-        networkManager?.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(focusString: name)))
+        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(focusString: name)))
     }
 }
 
@@ -68,10 +59,10 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         var nodes: [String:String?]?
         switch (tag) {
         case PickerTags.FocusNode:
-            nodes = focusNodes
+            nodes = OpenSpaceManager.shared.focusNodes
             break
         case PickerTags.AllNodes:
-            nodes = allNodes
+            nodes = OpenSpaceManager.shared.allNodes
             break
         }
 
@@ -93,10 +84,10 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         var unsorted: [String:String?]?
         switch (tag) {
         case PickerTags.FocusNode:
-            unsorted = focusNodes
+            unsorted = OpenSpaceManager.shared.focusNodes
             break
         case PickerTags.AllNodes:
-            unsorted = allNodes
+            unsorted = OpenSpaceManager.shared.allNodes
             break
         }
 
@@ -112,26 +103,22 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
             return nil
         }
 
-//        var unsorted: [String:String?]?
         var n: [String]?
 
         switch (tag) {
         case PickerTags.FocusNode:
-        //    unsorted = focusNodes
-            n = focusNodeNames
+            n = OpenSpaceManager.shared.focusNodeNames
             break
         case PickerTags.AllNodes:
-        //    unsorted = allNodes
-            n = allNodeNames
+            n = OpenSpaceManager.shared.allNodeNames
             break
         }
 
-//        let nodes = unsorted?.sorted {
-//            return $0.key < $1.key
-//            } ?? []
+        guard let nodes = n, row < nodes.count else {
+            return NSAttributedString(string: "----\(row)----", attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
+        }
 
-//        return NSAttributedString(string: nodes[row].key, attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
-        return NSAttributedString(string: n![row], attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
+        return NSAttributedString(string: nodes[row], attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -142,10 +129,16 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 
         switch (tag) {
         case PickerTags.FocusNode:
-            changeFocus(name: focusNodeNames![row])
+            guard let focusNodes = OpenSpaceManager.shared.focusNodeNames else {
+                break
+            }
+            changeFocus(name: focusNodes[row])
             break
         case PickerTags.AllNodes:
-            changeFocus(name: allNodeNames![row])
+            guard let allNodes = OpenSpaceManager.shared.allNodeNames else {
+                break
+            }
+            changeFocus(name: allNodes[row])
             break
         }
     }

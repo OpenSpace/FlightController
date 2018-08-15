@@ -18,11 +18,8 @@
 		432C18EC2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
 		432C18ED2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
 		432C18EE2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
-		4340A2FD210B914B00A4DC38 /* JoystickSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */; };
-		4340A2FE210B914B00A4DC38 /* JoystickSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */; };
-		4340A2FF210B914B00A4DC38 /* JoystickSKView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */; };
 		435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AC20B617CE00A88CBD /* AppDelegate.swift */; };
-		435164AF20B617CE00A88CBD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AE20B617CE00A88CBD /* ViewController.swift */; };
+		435164AF20B617CE00A88CBD /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AE20B617CE00A88CBD /* ConnectionViewController.swift */; };
 		435164B220B617CE00A88CBD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 435164B020B617CE00A88CBD /* Main.storyboard */; };
 		435164B420B617CF00A88CBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 435164B320B617CF00A88CBD /* Assets.xcassets */; };
 		435164B720B617CF00A88CBD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 435164B520B617CF00A88CBD /* LaunchScreen.storyboard */; };
@@ -31,7 +28,7 @@
 		439A2055210163C9002E3CC4 /* JoystickDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */; };
 		439A2056210163C9002E3CC4 /* JoystickDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */; };
 		439A2057210163C9002E3CC4 /* JoystickDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */; };
-		439ADEC02121F9A400E27C87 /* JoystickTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439ADEBD2121F9A400E27C87 /* JoystickTimerView.swift */; };
+		439ADEC02121F9A400E27C87 /* JoystickViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439ADEBD2121F9A400E27C87 /* JoystickViewController.swift */; };
 		43A27DBF210A4EAB004BAB32 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DBE210A4EAB004BAB32 /* NavigationViewController.swift */; };
 		43A27DC0210A4EAB004BAB32 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DBE210A4EAB004BAB32 /* NavigationViewController.swift */; };
 		43A27DC1210A4EAB004BAB32 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DBE210A4EAB004BAB32 /* NavigationViewController.swift */; };
@@ -44,9 +41,9 @@
 		43A27DD1210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
 		43A27DD2210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
 		43A27DD3210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */; };
-		43D17B2B21124C7300716945 /* ConfiguredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* ConfiguredViewController.swift */; };
-		43D17B2C21124C7300716945 /* ConfiguredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* ConfiguredViewController.swift */; };
-		43D17B2D21124C7300716945 /* ConfiguredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* ConfiguredViewController.swift */; };
+		43D17B2B21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
+		43D17B2C21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
+		43D17B2D21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,10 +95,9 @@
 		431E5B9720F87BED008715AD /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
 		431E5C3720F87F7A008715AD /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = Starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		432C18EB2119D5C8009F596E /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
-		4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickSKView.swift; sourceTree = "<group>"; };
 		435164A920B617CE00A88CBD /* FlightController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164AC20B617CE00A88CBD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		435164AE20B617CE00A88CBD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		435164AE20B617CE00A88CBD /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
 		435164B120B617CE00A88CBD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		435164B320B617CF00A88CBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		435164B620B617CF00A88CBD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -113,12 +109,12 @@
 		435164CC20B617CF00A88CBD /* FlightControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightControllerUITests.swift; sourceTree = "<group>"; };
 		435164CE20B617CF00A88CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickDataTypes.swift; sourceTree = "<group>"; };
-		439ADEBD2121F9A400E27C87 /* JoystickTimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoystickTimerView.swift; sourceTree = "<group>"; };
+		439ADEBD2121F9A400E27C87 /* JoystickViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoystickViewController.swift; sourceTree = "<group>"; };
 		43A27DBE210A4EAB004BAB32 /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		43A27DC4210A52FB004BAB32 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		43A27DC8210A860D004BAB32 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSpaceNavigation.swift; sourceTree = "<group>"; };
-		43D17B2A21124C7300716945 /* ConfiguredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfiguredViewController.swift; sourceTree = "<group>"; };
+		43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSpaceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,10 +186,9 @@
 				435164B820B617CF00A88CBD /* Info.plist */,
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
-				43D17B2A21124C7300716945 /* ConfiguredViewController.swift */,
-				439ADEBD2121F9A400E27C87 /* JoystickTimerView.swift */,
+				435164AE20B617CE00A88CBD /* ConnectionViewController.swift */,
+				439ADEBD2121F9A400E27C87 /* JoystickViewController.swift */,
 				439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */,
-				4340A2FC210B914B00A4DC38 /* JoystickSKView.swift */,
 				435164B520B617CF00A88CBD /* LaunchScreen.storyboard */,
 				435164B020B617CE00A88CBD /* Main.storyboard */,
 				432C18EB2119D5C8009F596E /* MenuViewController.swift */,
@@ -202,7 +197,7 @@
 				43A27DBE210A4EAB004BAB32 /* NavigationViewController.swift */,
 				43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */,
 				430CDE602118EBE0008531F4 /* OpenSpaceManager.swift */,
-				435164AE20B617CE00A88CBD /* ViewController.swift */,
+				43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */,
 				431E5B9720F87BED008715AD /* WebsocketManager.swift */,
 				43E5568020CB0092006A2730 /* ext */,
 			);
@@ -396,14 +391,13 @@
 				43A27DBF210A4EAB004BAB32 /* NavigationViewController.swift in Sources */,
 				43A27DC5210A52FB004BAB32 /* MotionManager.swift in Sources */,
 				430CDE612118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
-				43D17B2B21124C7300716945 /* ConfiguredViewController.swift in Sources */,
+				43D17B2B21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
 				439A2055210163C9002E3CC4 /* JoystickDataTypes.swift in Sources */,
-				439ADEC02121F9A400E27C87 /* JoystickTimerView.swift in Sources */,
-				435164AF20B617CE00A88CBD /* ViewController.swift in Sources */,
+				439ADEC02121F9A400E27C87 /* JoystickViewController.swift in Sources */,
+				435164AF20B617CE00A88CBD /* ConnectionViewController.swift in Sources */,
 				43A27DC9210A860D004BAB32 /* NetworkManager.swift in Sources */,
 				432C18EC2119D5C8009F596E /* MenuViewController.swift in Sources */,
 				43A27DD1210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */,
-				4340A2FD210B914B00A4DC38 /* JoystickSKView.swift in Sources */,
 				431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */,
 				435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */,
 			);
@@ -413,12 +407,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4340A2FE210B914B00A4DC38 /* JoystickSKView.swift in Sources */,
 				43A27DCA210A860D004BAB32 /* NetworkManager.swift in Sources */,
 				43A27DD2210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */,
 				43A27DC0210A4EAB004BAB32 /* NavigationViewController.swift in Sources */,
 				432C18ED2119D5C8009F596E /* MenuViewController.swift in Sources */,
-				43D17B2C21124C7300716945 /* ConfiguredViewController.swift in Sources */,
+				43D17B2C21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
 				435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */,
 				430CDE622118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
 				431E5B9920F87BED008715AD /* WebsocketManager.swift in Sources */,
@@ -431,12 +424,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4340A2FF210B914B00A4DC38 /* JoystickSKView.swift in Sources */,
 				43A27DCB210A860D004BAB32 /* NetworkManager.swift in Sources */,
 				43A27DD3210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */,
 				43A27DC1210A4EAB004BAB32 /* NavigationViewController.swift in Sources */,
 				432C18EE2119D5C8009F596E /* MenuViewController.swift in Sources */,
-				43D17B2D21124C7300716945 /* ConfiguredViewController.swift in Sources */,
+				43D17B2D21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
 				435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */,
 				430CDE632118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
 				431E5B9A20F87BED008715AD /* WebsocketManager.swift in Sources */,

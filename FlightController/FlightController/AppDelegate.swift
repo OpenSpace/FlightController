@@ -16,11 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        guard let rootView = window?.rootViewController as? NavigationViewController else { return false }
-
-        rootView.motionManager = CMMotionManager()
-        rootView.networkManager = WebsocketManager()
-
         return true
     }
 

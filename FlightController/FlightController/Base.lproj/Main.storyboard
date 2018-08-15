@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Connection View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ConnectionViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -73,24 +73,10 @@
             </objects>
             <point key="canvasLocation" x="-1235" y="-464"/>
         </scene>
-        <!--JoystickSK View Controller-->
-        <scene sceneID="cUY-Zg-NSv">
-            <objects>
-                <viewController id="ERj-D9-hDD" customClass="JoystickSKViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
-                    <skView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G2y-W0-VBh">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <gestureRecognizers/>
-                    </skView>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Uss-kL-e4A" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="324" y="-1506"/>
-        </scene>
-        <!--Joystick Timer View Controller-->
+        <!--Joystick View Controller-->
         <scene sceneID="Nye-yi-VsK">
             <objects>
-                <viewController id="lNb-l4-wjC" customClass="JoystickTimerViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="lNb-l4-wjC" customClass="JoystickViewController" customModule="FlightController" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XPR-U6-TsQ">
                         <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

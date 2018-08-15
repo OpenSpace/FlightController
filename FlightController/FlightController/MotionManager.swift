@@ -9,36 +9,70 @@
 import UIKit
 import CoreMotion
 
-protocol MotionManager {
+final class MotionManager {
+    static let shared = MotionManager()
+
     /// The CMMotionManager object
-    var motionManager: CMMotionManager? { get set }
+    var manager: CMMotionManager?
 
     /// The reference attitude for calculations
-    var referenceAttitude: CMAttitude! { get set }
+    var referenceAttitude: CMAttitude!
 
     /// The current attitude
-    var currentAttitude: CMAttitude? { get }
+    var currentAttitude: CMAttitude?
 
     /// A threshold for pressure sensitivity
-    static var forceThreshold: CGFloat { get set }
+    var forceThreshold: CGFloat = 4.0
 
+
+    private init() {
+    }
     /**
      Set self.motionManager
 
      - Parameter manager: A CMMotionManager?
      */
-    func motionManager(_ manager: CMMotionManager?)
+    func motionManager(_ manager: CMMotionManager?) {
+        self.manager = manager
+    }
 
     /**
      Set self.referenceAttitude
 
      - Parameter reference: A CMAttitude?
      */
-    func referenceAttitude(_ reference: CMAttitude?)
+    func referenceAttitude(_ reference: CMAttitude?) {
+        self.referenceAttitude = reference
+    }
 
     /// Setup and begin getting motion updates from self.motionManager
-    func startMotionUpdates()
+    func startMotionUpdates() {
+        guard let motionManager = manager, motionManager.isDeviceMotionAvailable else {
+            return
+        }
+
+        //motionManager.deviceMotionUpdateInterval = 1.0 / 30.0
+        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: .main) { deviceMotion, error in
+            guard let deviceMotion = deviceMotion else { return }
+
+            self.currentAttitude = deviceMotion.attitude
+
+            // Store the reference attitude when motion mode is engaged
+            if (self.referenceAttitude == nil) {
+                self.referenceAttitude = self.currentAttitude!.copy() as! CMAttitude
+            }
+
+            self.currentAttitude!.multiply(byInverseOf: self.referenceAttitude)
+        }
+    }
 
     /// Stop motion updates from self.motionManager
-    func stopMotionUpdates()
+    func stopMotionUpdates() {
+        guard let motionManager = manager, motionManager.isDeviceMotionActive else { return }
+
+        // Release the reference attitude when motion disengaged
+        motionManager.stopDeviceMotionUpdates()
+        referenceAttitude = nil
+        currentAttitude = nil
+    }
 }
