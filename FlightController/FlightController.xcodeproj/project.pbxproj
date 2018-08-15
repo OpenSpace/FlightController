@@ -596,6 +596,7 @@
 				DEVELOPMENT_TEAM = 955888J573;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = FlightController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -617,6 +618,7 @@
 				DEVELOPMENT_TEAM = 955888J573;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = FlightController/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

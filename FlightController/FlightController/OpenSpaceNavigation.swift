@@ -74,7 +74,7 @@ struct ControllerAxisSettings {
 
     func attenuate(_ value: CGFloat) -> Double {
         let f = Float(value)
-        let t = f > 0 ? -threshold : threshold
+        let t = f > 0 ? 0:0//-threshold : threshold
         return abs(f) < threshold ? 0.0 : Double(f * self.multiplier) + Double(t)
     }
 
@@ -95,7 +95,7 @@ struct ControllerAxisSettings {
 
         let offset = value/max
 
-        let t = offset > 0 ? -threshold : threshold
+        let t = offset > 0 ? 0: 0//-threshold : threshold
         return abs(value/max) < CGFloat(threshold) ? 0.0 : Double(value * CGFloat(self.multiplier)) + Double(t)
     }
 
