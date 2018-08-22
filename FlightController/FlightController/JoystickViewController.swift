@@ -16,7 +16,7 @@ class JoystickViewController: OpenSpaceViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/60)
+    static let refreshRate: TimeInterval = TimeInterval(1.0/30.0)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
