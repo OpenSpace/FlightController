@@ -23,6 +23,7 @@ class ConnectionViewController: OpenSpaceViewController {
 
         NetworkManager.shared.addSocket(host: host)
         NetworkManager.shared.connect()
+        OpenSpaceManager.shared.reset()
     }
 
     /**
@@ -30,6 +31,7 @@ class ConnectionViewController: OpenSpaceViewController {
      */
     @IBAction
     func disconnectSocket() {
+        disableAutopilot()
         NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(type: .disconnect)))
     }
 }

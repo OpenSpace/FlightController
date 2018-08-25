@@ -33,9 +33,17 @@ final class OpenSpaceManager {
     /// Timeout before controller begins to doSomethingInteresting()
     var interestingCallback: Double = 3.0
 
+    /// Autopilot engaged
+    var autopilotEngaged: Bool = false
+
+    /// If waiting for autopilot to return from OpenSpace
+    var waitingForAutopilot: Bool = false
+
+    let defaultMotion: OpenSpaceInputState = OpenSpaceInputState(
+        values: [OpenSpaceMotions.OrbitX.rawValue: 0.01])
+
     /// Input state that defines what is done in doSomethingInteresting()
-    var somethingInteresting: OpenSpaceInputState = OpenSpaceInputState(
-        values: [OpenSpaceMotions.OrbitX.rawValue: 0.0015])
+    var somethingInteresting: OpenSpaceInputState
 
     /// Whether or not to engage "something interesting" mode
     var shouldDoSomethingInteresting: Bool {
@@ -46,7 +54,9 @@ final class OpenSpaceManager {
         return lastMovement.timeIntervalSinceNow.isLess(than: -interestingCallback)
     }
 
-    private init() { }
+    private init() {
+        somethingInteresting = defaultMotion
+    }
 
     /**
      Sets focusNodes with a dictionary
@@ -73,5 +83,21 @@ final class OpenSpaceManager {
      */
     func lastInteractionTime(_ date: Date?)  {
         lastInteractionTime = date
+    }
+
+    /**
+     Resets to defaults
+     */
+    func reset() {
+        focusNodes = nil
+        focusNodeNames = nil
+        allNodes = nil
+        allNodeNames = nil
+        forceThreshold = 4.0
+        lastInteractionTime = nil
+        interestingCallback = 3.0
+        autopilotEngaged = false
+        waitingForAutopilot = false
+        somethingInteresting = defaultMotion
     }
 }

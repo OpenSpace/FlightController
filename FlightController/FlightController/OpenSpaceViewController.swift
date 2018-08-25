@@ -34,8 +34,19 @@ class OpenSpaceViewController: UIViewController {
      **somethingInteresting**
      */
     func doSomethingInteresting() {
-        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(inputState: OpenSpaceManager.shared.somethingInteresting)))
+        OpenSpaceManager.shared.waitingForAutopilot = true
+        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(autopilotEngaged: true, autopilotInput: OpenSpaceManager.shared.somethingInteresting)))
     }
+
+    /**
+     Stop doing something interesting
+     */
+    func disableAutopilot() {
+        OpenSpaceManager.shared.autopilotEngaged = false
+        OpenSpaceManager.shared.waitingForAutopilot = true
+        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(autopilotEngaged: false)))
+    }
+
 }
 
 extension OpenSpaceViewController: WebSocketDelegate {
@@ -65,6 +76,14 @@ extension OpenSpaceViewController: WebSocketDelegate {
 
         if let _ = json.payload.disconnect {
             NetworkManager.shared.disconnect()
+            OpenSpaceManager.shared.reset()
+        }
+
+        if let autopilotPayload = json.payload.autopilot {
+            if(OpenSpaceManager.shared.waitingForAutopilot) {
+                OpenSpaceManager.shared.waitingForAutopilot = false
+                OpenSpaceManager.shared.autopilotEngaged = autopilotPayload.engaged
+            }
         }
     }
 

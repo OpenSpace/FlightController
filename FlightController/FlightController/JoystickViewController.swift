@@ -91,10 +91,15 @@ class JoystickViewController: OpenSpaceViewController {
     // MARK: Handle Touches
     @objc func tick() {
         if (!touchData.isEmpty) {
+            if(OpenSpaceManager.shared.autopilotEngaged) {
+                disableAutopilot()
+            }
             OpenSpaceManager.shared.lastInteractionTime = Date()
             handleTouches()
         } else if OpenSpaceManager.shared.shouldDoSomethingInteresting {
-            doSomethingInteresting()
+            if (!OpenSpaceManager.shared.autopilotEngaged && !OpenSpaceManager.shared.waitingForAutopilot) {
+                doSomethingInteresting()
+            }
         }
     }
 

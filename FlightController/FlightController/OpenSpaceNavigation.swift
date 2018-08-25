@@ -176,6 +176,7 @@ struct OpenSpacePayload: Codable {
         case connect
         case disconnect
         case changeFocus
+        case autopilot
     }
 
     var type: PayloadType = .none
@@ -183,6 +184,7 @@ struct OpenSpacePayload: Codable {
     var inputState: OpenSpaceInputState? = nil
     var disconnect: OpenSpaceDisconnect? = nil
     var changeFocus: OpenSpaceFocus? = nil
+    var autopilot: OpenSpaceAutopilot? = nil
 
     init(type: PayloadType) {
         self.type = type
@@ -200,6 +202,11 @@ struct OpenSpacePayload: Codable {
 
     init(focusString: String) {
         self.init(focusObject: OpenSpaceFocus(focus: focusString))
+    }
+
+    init(autopilotEngaged: Bool, autopilotInput: OpenSpaceInputState? = nil) {
+        type = .autopilot
+        autopilot = OpenSpaceAutopilot(engaged: autopilotEngaged, autopilotInput: autopilotInput)
     }
 }
 
@@ -286,4 +293,9 @@ struct OpenSpaceConnect: Codable {
 
 struct OpenSpaceDisconnect: Codable {
     var success: Bool? = nil
+}
+
+struct OpenSpaceAutopilot: Codable {
+    var engaged: Bool = true
+    var autopilotInput: OpenSpaceInputState?
 }
