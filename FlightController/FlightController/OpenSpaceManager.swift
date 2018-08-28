@@ -12,6 +12,22 @@ final class OpenSpaceManager {
 
     static let shared = OpenSpaceManager()
 
+    enum ScreenOrientation: Int {
+        case LandscapeLeft = 1
+        case LandscapeRight = -1
+
+        var d: Double {
+            return Double(rawValue)
+        }
+
+        var i: Int {
+            return rawValue
+        }
+    }
+
+    ///
+    var orientation: ScreenOrientation = .LandscapeLeft
+
     /// A dictionary of the focus nodes and their names
     var focusNodes: [String: String?]?
 

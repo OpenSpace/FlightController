@@ -114,6 +114,9 @@ class JoystickViewController: OpenSpaceViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        // Check the orientation
+        OpenSpaceManager.shared.orientation = UIDevice.current.orientation == .landscapeRight ? .LandscapeRight : .LandscapeLeft
+
         setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
 
         // Start a timer to send touch events from this view
@@ -317,8 +320,9 @@ class JoystickViewController: OpenSpaceViewController {
             switch type {
             case StickType.Left:
                 if let attitude = MotionManager.shared.currentAttitude {
+                    OpenSpaceManager.shared.orientation = UIDevice.current.orientation == .landscapeRight ? .LandscapeRight : .LandscapeLeft
                     let rollAxis = config.axisMapping[AXIS.LeftRoll]!
-                    inputState[rollAxis.motionName] = rollAxis.attenuate(CGFloat(attitude.roll))
+                    inputState[rollAxis.motionName] = rollAxis.attenuate(CGFloat(attitude.roll * OpenSpaceManager.shared.orientation.d))
                 }
                 break
             case StickType.Right:
