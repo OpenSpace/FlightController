@@ -16,7 +16,7 @@ class JoystickViewController: OpenSpaceViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1/60)
+    static let refreshRate: TimeInterval = TimeInterval(1.0/30.0)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -56,6 +56,46 @@ class JoystickViewController: OpenSpaceViewController {
         view.addSubview(rightStick)
         view.backgroundColor = UIColor.black
         resetJoysticks()
+
+        // Carter settings
+        config.axisMapping =
+            [ ControllerAxes.StickLeftX:
+                ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
+                                       invert: true,
+                                       sensitivity: 0.0005,
+                                       threshold: 0.075)
+                , ControllerAxes.StickLeftY:
+                    ControllerAxisSettings(motion: OpenSpaceMotions.ZoomOut,
+                                           invert: false,
+                                           sensitivity: 0.001,
+                                           threshold: 0.005)
+                , ControllerAxes.StickRightX:
+                    ControllerAxisSettings(motion: OpenSpaceMotions.OrbitX,
+                                           invert: false,
+                                           sensitivity: 0.001,
+                                           threshold: 0.05)
+                , ControllerAxes.StickRightY:
+                    ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
+                                           invert: false,
+                                           sensitivity: 0.001,
+                                           threshold: 0.05)
+                , ControllerAxes.LeftRoll:
+                    ControllerAxisSettings(motion: OpenSpaceMotions.PanY,
+                                           invert: true,
+                                           sensitivity: 0.1,
+                                           threshold: 0.01)
+//                , ControllerAxes.BothYaw:
+//                    ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
+//                                           invert: true,
+//                                           sensitivity: 0.1,
+//                                           threshold: 0.05)
+//                , ControllerAxes.BothRoll:
+//                    ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
+//                                           invert: true,
+//                                           sensitivity: 0.1,
+//                                           threshold: 0.05)
+
+        ]
 
 //            NotificationCenter.default.addObserver(
 //                forName: NSNotification.Name.UIScreenBrightnessDidChange,
@@ -164,18 +204,18 @@ class JoystickViewController: OpenSpaceViewController {
         guard let attitude = MotionManager.shared.currentAttitude else {
             return inputState
         }
-
-        // Handle Yaw/Banking
-        let yawAxis = config.axisMapping[AXIS.BothYaw]!
-        let yaw = yawAxis.attenuate(CGFloat(attitude.yaw))
-        inputState[yawAxis.motion!] = yaw
-        inputState[OpenSpaceMotions.LocalRollX] = yaw
-        currentBank += yaw
-
-        // Handle Roll/Forward motion
-        let rollAxis = config.axisMapping[AXIS.BothRoll]!
-        inputState[rollAxis.motion!] = rollAxis.attenuate(CGFloat(attitude.roll))
-
+//
+//        // Handle Yaw/Banking
+//        let yawAxis = config.axisMapping[AXIS.BothYaw]!
+//        let yaw = yawAxis.attenuate(CGFloat(attitude.yaw))
+//        inputState[yawAxis.motion!] = yaw
+//        inputState[OpenSpaceMotions.LocalRollX] = yaw
+//        currentBank += yaw
+//
+//        // Handle Roll/Forward motion
+//        if let rollAxis = config.axisMapping[AXIS.BothRoll] {
+//            inputState[rollAxis.motion!] = rollAxis.attenuate(CGFloat(attitude.roll))
+//        }
         return inputState
     }
 

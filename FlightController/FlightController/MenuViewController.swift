@@ -24,15 +24,14 @@ class MenuViewController: OpenSpaceViewController {
         focusPicker.dataSource = self
         focusPicker.center = CGPoint(x: view.center.x/2, y: view.center.y)
         focusPicker.tag = PickerTags.FocusNode.hashValue
-        focusPicker.bounds.size.width = view.center.x
+        focusPicker.bounds.size.width = view.center.x/2
 
         allPicker.backgroundColor = UIColor.black
         allPicker.dataSource = self
         allPicker.center = CGPoint(x: view.center.x + view.center.x/2,
                                    y: view.center.y)
         allPicker.tag = PickerTags.AllNodes.hashValue
-        allPicker.bounds.size.width = view.center.x
-
+        allPicker.bounds.size.width = view.center.x/2
     }
 
     func changeFocus(name: String) {
