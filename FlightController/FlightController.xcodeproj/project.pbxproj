@@ -18,6 +18,9 @@
 		432C18EC2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
 		432C18ED2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
 		432C18EE2119D5C8009F596E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C18EB2119D5C8009F596E /* MenuViewController.swift */; };
+		433B550E2136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433B550D2136186600888D45 /* FocusNodeCollectionViewController.swift */; };
+		433B550F2136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433B550D2136186600888D45 /* FocusNodeCollectionViewController.swift */; };
+		433B55102136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433B550D2136186600888D45 /* FocusNodeCollectionViewController.swift */; };
 		435164AD20B617CE00A88CBD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AC20B617CE00A88CBD /* AppDelegate.swift */; };
 		435164AF20B617CE00A88CBD /* ConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435164AE20B617CE00A88CBD /* ConnectionViewController.swift */; };
 		435164B220B617CE00A88CBD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 435164B020B617CE00A88CBD /* Main.storyboard */; };
@@ -95,6 +98,7 @@
 		431E5B9720F87BED008715AD /* WebsocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketManager.swift; sourceTree = "<group>"; };
 		431E5C3720F87F7A008715AD /* Starscream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Starscream.xcodeproj; path = Starscream/Starscream.xcodeproj; sourceTree = "<group>"; };
 		432C18EB2119D5C8009F596E /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		433B550D2136186600888D45 /* FocusNodeCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusNodeCollectionViewController.swift; sourceTree = "<group>"; };
 		435164A920B617CE00A88CBD /* FlightController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		435164AC20B617CE00A88CBD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		435164AE20B617CE00A88CBD /* ConnectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewController.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 				435164B320B617CF00A88CBD /* Assets.xcassets */,
 				435164AC20B617CE00A88CBD /* AppDelegate.swift */,
 				435164AE20B617CE00A88CBD /* ConnectionViewController.swift */,
+				433B550D2136186600888D45 /* FocusNodeCollectionViewController.swift */,
 				439ADEBD2121F9A400E27C87 /* JoystickViewController.swift */,
 				439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */,
 				435164B520B617CF00A88CBD /* LaunchScreen.storyboard */,
@@ -396,6 +401,7 @@
 				439ADEC02121F9A400E27C87 /* JoystickViewController.swift in Sources */,
 				435164AF20B617CE00A88CBD /* ConnectionViewController.swift in Sources */,
 				43A27DC9210A860D004BAB32 /* NetworkManager.swift in Sources */,
+				433B550E2136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */,
 				432C18EC2119D5C8009F596E /* MenuViewController.swift in Sources */,
 				43A27DD1210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */,
 				431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */,
@@ -412,6 +418,7 @@
 				43A27DC0210A4EAB004BAB32 /* NavigationViewController.swift in Sources */,
 				432C18ED2119D5C8009F596E /* MenuViewController.swift in Sources */,
 				43D17B2C21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
+				433B550F2136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */,
 				435164C220B617CF00A88CBD /* FlightControllerTests.swift in Sources */,
 				430CDE622118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
 				431E5B9920F87BED008715AD /* WebsocketManager.swift in Sources */,
@@ -429,6 +436,7 @@
 				43A27DC1210A4EAB004BAB32 /* NavigationViewController.swift in Sources */,
 				432C18EE2119D5C8009F596E /* MenuViewController.swift in Sources */,
 				43D17B2D21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
+				433B55102136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */,
 				435164CD20B617CF00A88CBD /* FlightControllerUITests.swift in Sources */,
 				430CDE632118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
 				431E5B9A20F87BED008715AD /* WebsocketManager.swift in Sources */,

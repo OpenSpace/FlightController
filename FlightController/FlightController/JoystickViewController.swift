@@ -250,7 +250,6 @@ class JoystickViewController: OpenSpaceViewController {
             if (!hasForce) {
                 hasForce = true
                 MotionManager.shared.startMotionUpdates()
-                print("starting motion");
             }
         }
     }
