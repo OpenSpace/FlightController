@@ -47,6 +47,13 @@ class OpenSpaceViewController: UIViewController {
         NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(autopilotEngaged: false)))
     }
 
+    /**
+     Set friction in OpenSpace
+     */
+    func setFriction(_ friction: Bool) {
+        OpenSpaceManager.shared.waitingForFriction = true
+        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(friction: friction)))
+    }
 }
 
 extension OpenSpaceViewController: WebSocketDelegate {
@@ -69,22 +76,33 @@ extension OpenSpaceViewController: WebSocketDelegate {
         }
 
         // Handle the different payload types
-        if let connectPayload = json.payload.connect {
+        if json.payload.type == OpenSpacePayload.PayloadType.connect
+            , let connectPayload = json.payload.connect {
             OpenSpaceManager.shared.focusNodes(connectPayload.focusNodes)
             OpenSpaceManager.shared.allNodes(connectPayload.allNodes)
         }
 
-        if let _ = json.payload.disconnect {
+        if json.payload.type == OpenSpacePayload.PayloadType.disconnect
+            , let _ = json.payload.disconnect {
             NetworkManager.shared.disconnect()
             OpenSpaceManager.shared.reset()
         }
 
-        if let autopilotPayload = json.payload.autopilot {
+        if json.payload.type == OpenSpacePayload.PayloadType.autopilot
+            , let autopilotPayload = json.payload.autopilot {
             if(OpenSpaceManager.shared.waitingForAutopilot) {
                 OpenSpaceManager.shared.waitingForAutopilot = false
                 OpenSpaceManager.shared.autopilotEngaged = autopilotPayload.engaged
             }
         }
+
+        if json.payload.type == OpenSpacePayload.PayloadType.friction
+            , let frictionPayload = json.payload.friction {
+            print("Friction (\(frictionPayload))")
+            OpenSpaceManager.shared.waitingForFriction = false
+            OpenSpaceManager.shared.frictionEnabled = frictionPayload.engaged
+        }
+
     }
 
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {

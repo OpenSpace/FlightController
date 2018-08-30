@@ -22,7 +22,7 @@ final class MotionManager {
     var currentAttitude: CMAttitude?
 
     /// A threshold for pressure sensitivity
-    var forceThreshold: CGFloat = 4.0
+    var forceThreshold: CGFloat = 6.0
 
 
     private init() {

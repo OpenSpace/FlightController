@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import SpriteKit
-import CoreMotion
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -9,4 +9,12 @@
 import UIKit
 
 class NavigationViewController: UINavigationController {
+
+    override var shouldAutorotate: Bool {
+        guard let currentView = topViewController as? JoystickViewController else {
+            return true
+        }
+        return currentView.shouldAutorotate
+    }
 }
+

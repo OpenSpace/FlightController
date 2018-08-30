@@ -39,6 +39,7 @@ func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 enum StickType: String {
     case Left
     case Right
+    case Center
     case All
     case None
 

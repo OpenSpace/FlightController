@@ -41,9 +41,11 @@ class JoystickViewController: OpenSpaceViewController {
     /// The configurations for the axes
     var config: OpenSpaceAxisConfiguration = OpenSpaceAxisConfiguration()
 
+    override var shouldAutorotate: Bool {
+        return !hasForce
+    }
     /// Convenience alias for ConrollerAxes
     typealias AXIS = ControllerAxes
-
 
     // MARK: UIViewController overrides
     override func viewDidLoad() {
@@ -58,7 +60,7 @@ class JoystickViewController: OpenSpaceViewController {
         resetJoysticks()
 
         // Carter settings
-        config.axisMapping =
+        let carterSettings =
             [ ControllerAxes.StickLeftX:
                 ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
                                        invert: true,
@@ -84,18 +86,9 @@ class JoystickViewController: OpenSpaceViewController {
                                            invert: true,
                                            sensitivity: 0.1,
                                            threshold: 0.01)
-//                , ControllerAxes.BothYaw:
-//                    ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
-//                                           invert: true,
-//                                           sensitivity: 0.1,
-//                                           threshold: 0.05)
-//                , ControllerAxes.BothRoll:
-//                    ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
-//                                           invert: true,
-//                                           sensitivity: 0.1,
-//                                           threshold: 0.05)
-
         ]
+
+        config.merge(carterSettings, overwrite: true)
 
 //            NotificationCenter.default.addObserver(
 //                forName: NSNotification.Name.UIScreenBrightnessDidChange,
@@ -131,26 +124,54 @@ class JoystickViewController: OpenSpaceViewController {
         return [.all]
     }
 
+    // MARK: Updating rotations
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        // Add or remove the right stick
+        if OpenSpaceManager.shared.isPortrait {
+            rightStick.removeFromSuperview()
+            setFriction(false)
+        } else if !view.subviews.contains(rightStick) {
+            view.addSubview(rightStick)
+        }
+
+        // If isPortrait, disable multiple touch, else enable
+        view.isMultipleTouchEnabled = !OpenSpaceManager.shared.isPortrait
+        resetJoysticks()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        OpenSpaceManager.shared.updateOrientation()
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    }
+
     // MARK: Handle Touches
     @objc func tick() {
         if (!touchData.isEmpty) {
-            if(OpenSpaceManager.shared.autopilotEngaged) {
+            if(OpenSpaceManager.shared.autopilotEngaged && !OpenSpaceManager.shared.isPortrait) {
                 disableAutopilot()
             }
             OpenSpaceManager.shared.lastInteractionTime = Date()
             handleTouches()
-        } else if OpenSpaceManager.shared.shouldDoSomethingInteresting {
-            if (!OpenSpaceManager.shared.autopilotEngaged && !OpenSpaceManager.shared.waitingForAutopilot) {
-                doSomethingInteresting()
+        } else {
+            if OpenSpaceManager.shared.shouldDoSomethingInteresting {
+                if (!OpenSpaceManager.shared.autopilotEngaged && !OpenSpaceManager.shared.waitingForAutopilot) {
+                    doSomethingInteresting()
+                }
             }
+            hasForce = false
         }
     }
 
-    func handleTouches() {
-        // Must pop and replace to edit
+    private func handleLandscape() {
         var leftIsDeep = false
         var rightIsDeep = false
+
         for touch in touchData {
+            // Must pop and replace to edit
             var tmpTouch = touchData.remove(touch)!
             handleActiveStick(touch: &tmpTouch)
             touchData.update(with: tmpTouch)
@@ -158,6 +179,7 @@ class JoystickViewController: OpenSpaceViewController {
             rightIsDeep = (touch.stick == .Right && touch.isDeep) || rightIsDeep
         }
 
+        // Merge all the data into a single message
         var state = OpenSpaceInputState()
         if (leftIsDeep && rightIsDeep) {
             state.merge(processFlight())
@@ -188,25 +210,56 @@ class JoystickViewController: OpenSpaceViewController {
                 }
             }
         }
-        // Merge all the data into a single message
+
         // Send it if not empty
         if (!state.isEmpty()) {
             sendData(state: state)
         }
+    }
 
+    private func handlePortrait() {
+        var isDeep = false;
+        for touch in touchData {
+            // Must pop and replace to edit
+            var tmpTouch = touchData.remove(touch)!
+            handleActiveStick(touch: &tmpTouch)
+            touchData.update(with: tmpTouch)
+            isDeep = touch.isDeep || isDeep
+        }
+        var state = OpenSpaceInputState()
+
+        for touch in touchData {
+            state.merge(processCenterStick(touch: touch), overwrite: true)
+        }
+
+        // Send it if not empty
+        if (!state.isEmpty()) {
+            sendData(state: state)
+        }
+    }
+
+    func handleTouches() {
+        if OpenSpaceManager.shared.isPortrait {
+            handlePortrait()
+        } else {
+            handleLandscape()
+        }
+
+        // Turn off the motionManager if no deep touches
         if ((touchData.filter { $0.isDeep }).isEmpty) {
             hasForce = false
             MotionManager.shared.stopMotionUpdates()
         }
+
     }
 
     func processFlight() -> OpenSpaceInputState {
 
         var inputState = OpenSpaceInputState()
 
-        guard let attitude = MotionManager.shared.currentAttitude else {
-            return inputState
-        }
+//        guard let attitude = MotionManager.shared.currentAttitude else {
+//            return inputState
+//        }
 //
 //        // Handle Yaw/Banking
 //        let yawAxis = config.axisMapping[AXIS.BothYaw]!
@@ -229,6 +282,7 @@ class JoystickViewController: OpenSpaceViewController {
      - Parameter touch: The JoystickTouch to process (inout)
      */
     func handleActiveStick(touch: inout JoystickTouch) {
+
         let midX = (touch.view.window?.bounds.midX)!
         touch.stick = touch.startLocation.x < midX ? .Left : .Right
 
@@ -265,7 +319,11 @@ class JoystickViewController: OpenSpaceViewController {
         let midX = (view.window?.bounds.midX)!
         for d in touchData {
             if(touches.contains(d.touch)) {
-                d.startLocation.x < midX ? resetLeftStick() : resetRightStick()
+                if OpenSpaceManager.shared.isPortrait {
+                    resetJoysticks()
+                } else {
+                    d.startLocation.x < midX ? resetLeftStick() : resetRightStick()
+                }
                 touchData.remove(d)
             }
         }
@@ -275,7 +333,12 @@ class JoystickViewController: OpenSpaceViewController {
         reset()
     }
 
-    func sendData(state: OpenSpaceInputState) {
+    /**
+     Wraps and sends an input state via the NetworkManager
+
+     - Parameter state: the input state to send
+     */
+    private func sendData(state: OpenSpaceInputState) {
         if NetworkManager.shared.isConnected {
             let payload = OpenSpacePayload(inputState: state)
             let data = OpenSpaceData(topic: 1, payload: payload)
@@ -310,6 +373,13 @@ class JoystickViewController: OpenSpaceViewController {
             inputState[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
             inputState[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
             break
+        case StickType.Center:
+            let xAxis = config.axisMapping[AXIS.StickCenterX]!
+            let yAxis = config.axisMapping[AXIS.StickCenterY]!
+            inputState[xAxis.motionName] = xAxis.attenuate(touch: touch, axis: false)
+            inputState[yAxis.motionName] = yAxis.attenuate(touch: touch, axis: true)
+            break
+
         default:
             break
         }
@@ -319,12 +389,19 @@ class JoystickViewController: OpenSpaceViewController {
             switch type {
             case StickType.Left:
                 if let attitude = MotionManager.shared.currentAttitude {
-                    OpenSpaceManager.shared.orientation = UIDevice.current.orientation == .landscapeRight ? .LandscapeRight : .LandscapeLeft
                     let rollAxis = config.axisMapping[AXIS.LeftRoll]!
                     inputState[rollAxis.motionName] = rollAxis.attenuate(CGFloat(attitude.roll * OpenSpaceManager.shared.orientation.d))
                 }
                 break
             case StickType.Right:
+                break
+            case StickType.Center:
+                if let attitude = MotionManager.shared.currentAttitude {
+                    let rollAxis = config.axisMapping[AXIS.CenterRoll]!
+                    let pitchAxis = config.axisMapping[AXIS.CenterPitch]!
+                    inputState[rollAxis.motionName] = rollAxis.attenuate(CGFloat(attitude.roll))
+                    inputState[pitchAxis.motionName] = pitchAxis.attenuate(CGFloat(attitude.pitch))
+                }
                 break
             default:
                 break
@@ -352,6 +429,17 @@ class JoystickViewController: OpenSpaceViewController {
         rightStick.center = touch.location
         return getInputData(touch: touch, type: StickType.Right)
     }
+
+    /**
+     Process a touch using the center joystick's settings
+
+     - Parameter touch: A JoystickTouch
+     */
+    func processCenterStick(touch: JoystickTouch) -> OpenSpaceInputState {
+        leftStick.center = touch.location
+        return getInputData(touch: touch, type: StickType.Center)
+    }
+
 
     /// Reset all joysticks
     func resetJoysticks() {
@@ -382,6 +470,7 @@ class JoystickViewController: OpenSpaceViewController {
 
         let left = CGPoint(x: w/4, y: h/2)
         let right = CGPoint(x: w - w/4, y: h/2)
+        let center = CGPoint(x: w/2, y: h/2)
 
         let leftAnimation = UIViewPropertyAnimator(duration: duration,
                                                    dampingRatio: damping,
@@ -395,6 +484,13 @@ class JoystickViewController: OpenSpaceViewController {
                                                         self?.rightStick.center = right
         })
 
+        let centerAnimation = UIViewPropertyAnimator(duration: duration,
+                                                   dampingRatio: damping,
+                                                   animations: { [weak self] in
+                                                    self?.leftStick.center = center
+        })
+
+
         switch type {
         case StickType.Left:
             leftAnimation.startAnimation()
@@ -403,8 +499,12 @@ class JoystickViewController: OpenSpaceViewController {
             rightAnimation.startAnimation()
             break
         default:
-            leftAnimation.startAnimation()
-            rightAnimation.startAnimation()
+            if OpenSpaceManager.shared.isPortrait {
+                centerAnimation.startAnimation()
+            } else {
+                leftAnimation.startAnimation()
+                rightAnimation.startAnimation()
+            }
             break
         }
     }

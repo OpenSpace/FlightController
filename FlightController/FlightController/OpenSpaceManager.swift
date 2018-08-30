@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class OpenSpaceManager {
 
@@ -15,6 +16,7 @@ final class OpenSpaceManager {
     enum ScreenOrientation: Int {
         case LandscapeLeft = 1
         case LandscapeRight = -1
+        case Portrait = 2
 
         var d: Double {
             return Double(rawValue)
@@ -49,6 +51,12 @@ final class OpenSpaceManager {
     /// Timeout before controller begins to doSomethingInteresting()
     var interestingCallback: Double = 3.0
 
+    /// Friction Enabled
+    var frictionEnabled: Bool = true
+
+    /// If waiting for friction to return from OpenSpace
+    var waitingForFriction: Bool = false
+
     /// Autopilot engaged
     var autopilotEngaged: Bool = false
 
@@ -68,6 +76,16 @@ final class OpenSpaceManager {
         }
 
         return lastMovement.timeIntervalSinceNow.isLess(than: -interestingCallback)
+    }
+
+    var isPortrait: Bool {
+        return OpenSpaceManager.shared.orientation == .Portrait
+    }
+
+    var isDeepPressed: Bool = false
+
+    var shouldAutoRotate: Bool {
+        return !isDeepPressed
     }
 
     private init() {
@@ -115,5 +133,22 @@ final class OpenSpaceManager {
         autopilotEngaged = false
         waitingForAutopilot = false
         somethingInteresting = defaultMotion
+    }
+
+    func updateOrientation() {
+        switch (UIDevice.current.orientation) {
+        case .landscapeLeft:
+            orientation = .LandscapeLeft
+            break
+        case .landscapeRight:
+            orientation = .LandscapeRight
+            break
+        case .portrait:
+            orientation = .Portrait
+            break
+        default:
+            orientation = .LandscapeLeft
+            break
+        }
     }
 }

@@ -28,12 +28,17 @@ enum ControllerAxes {
     case StickLeftY
     case StickRightX
     case StickRightY
+    case StickCenterX
+    case StickCenterY
     case LeftRoll
     case LeftPitch
     case LeftYaw
     case RightRoll
     case RightPitch
     case RightYaw
+    case CenterRoll
+    case CenterPitch
+    case CenterYaw
     case BothRoll
     case BothPitch
     case BothYaw
@@ -163,9 +168,32 @@ struct OpenSpaceAxisConfiguration {
                             invert: true,
                             sensitivity: 0.1,
                             threshold: 0.05)
+        , ControllerAxes.StickCenterX:
+            ControllerAxisSettings(motion: OpenSpaceMotions.OrbitX,
+                                       invert: false,
+                                       sensitivity: 0.001,
+                                       threshold: 0.05)
+        , ControllerAxes.StickCenterY:
+            ControllerAxisSettings(motion: OpenSpaceMotions.OrbitY,
+                                       invert: false,
+                                       sensitivity: 0.001,
+                                       threshold: 0.05)
+        , ControllerAxes.CenterRoll:
+            ControllerAxisSettings(motion: OpenSpaceMotions.GlobalRollX,
+                                   invert: true,
+                                   sensitivity: 0.05,
+                                   threshold: 0.05)
+        , ControllerAxes.CenterPitch:
+            ControllerAxisSettings(motion: OpenSpaceMotions.ZoomIn,
+                                   invert: true,
+                                   sensitivity: 0.05,
+                                   threshold: 0.05)
 
     ]
 
+    mutating func merge(_ newConfig: [ControllerAxes:ControllerAxisSettings], overwrite: Bool = false) {
+        axisMapping.merge(newConfig) { (current, new) in overwrite ? new : current }
+    }
 }
 
 struct OpenSpacePayload: Codable {
@@ -177,6 +205,7 @@ struct OpenSpacePayload: Codable {
         case disconnect
         case changeFocus
         case autopilot
+        case friction
     }
 
     var type: PayloadType = .none
@@ -185,6 +214,7 @@ struct OpenSpacePayload: Codable {
     var disconnect: OpenSpaceDisconnect? = nil
     var changeFocus: OpenSpaceFocus? = nil
     var autopilot: OpenSpaceAutopilot? = nil
+    var friction: OpenSpaceFriction? = nil
 
     init(type: PayloadType) {
         self.type = type
@@ -207,6 +237,11 @@ struct OpenSpacePayload: Codable {
     init(autopilotEngaged: Bool, autopilotInput: OpenSpaceInputState? = nil) {
         type = .autopilot
         autopilot = OpenSpaceAutopilot(engaged: autopilotEngaged, autopilotInput: autopilotInput)
+    }
+
+    init(friction: Bool) {
+        type = .friction
+        self.friction = OpenSpaceFriction(engaged: friction)
     }
 }
 
@@ -298,4 +333,8 @@ struct OpenSpaceDisconnect: Codable {
 struct OpenSpaceAutopilot: Codable {
     var engaged: Bool = true
     var autopilotInput: OpenSpaceInputState?
+}
+
+struct OpenSpaceFriction: Codable {
+    var engaged: Bool = true
 }
