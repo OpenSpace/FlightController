@@ -44,9 +44,9 @@ Portrait mode is for more casual, exploratory flight. It is envisioned more for 
 - Stick Y: Orbit around the focus object vertically 
 
 #### Accelerometer
-- Deep Press: Activates Pitch & Yaw
+- Deep Press: Activates Pitch & Roll
 	- Pitch: Zoom
-	- Yaw: Rotate the focus object/view
+	- Roll: Rotate the focus object/view
 
 ## Todo
 - Run/send Lua scripts
