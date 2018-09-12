@@ -16,7 +16,7 @@ class JoystickViewController: OpenSpaceViewController {
     static let JoystickImage = UIImage(named: "Joystick")
 
     /// The sending rate
-    static let refreshRate: TimeInterval = TimeInterval(1.0/30.0)
+    static let refreshRate: TimeInterval = TimeInterval(1.0/60.0)
 
     /// A list of currently active touch objects
     var touchData: Set<JoystickTouch> = []
@@ -443,16 +443,64 @@ class JoystickViewController: OpenSpaceViewController {
 
     /// Reset all joysticks
     func resetJoysticks() {
+        var s = OpenSpaceInputState()
+        for axis in [AXIS.StickRightX,
+                     AXIS.StickRightY,
+                     AXIS.RightPitch,
+                     AXIS.RightYaw,
+                     AXIS.RightRoll]
+        {
+            if let motion = config.axisMapping[axis] {
+                s[motion.motionName] = 0.0
+            }
+        }
+        sendData(state: s)
         resetStick(type: StickType.All)
     }
 
     /// Reset the left joystick
     func resetLeftStick() {
+        var s = OpenSpaceInputState()
+
+        for axis in [AXIS.StickLeftX,
+                  AXIS.StickLeftY,
+                  AXIS.LeftPitch,
+                  AXIS.LeftYaw,
+                  AXIS.LeftRoll]
+        {
+            if let motion = config.axisMapping[axis] {
+                s[motion.motionName] = 0.0
+            }
+        }
+
+        sendData(state: s)
         resetStick(type: StickType.Left)
     }
 
     /// Reset the right joystick
     func resetRightStick() {
+        var s = OpenSpaceInputState()
+        for axis in [AXIS.StickRightX,
+                     AXIS.StickRightY,
+                     AXIS.RightPitch,
+                     AXIS.RightYaw,
+                     AXIS.RightRoll,
+                     AXIS.StickLeftX,
+                     AXIS.StickLeftY,
+                     AXIS.LeftPitch,
+                     AXIS.LeftYaw,
+                     AXIS.LeftRoll,
+                     AXIS.StickCenterX,
+                     AXIS.StickCenterY,
+                     AXIS.CenterPitch,
+                     AXIS.CenterYaw,
+                     AXIS.CenterRoll,]
+        {
+            if let motion = config.axisMapping[axis] {
+                s[motion.motionName] = 0.0
+            }
+        }
+        sendData(state: s)
         resetStick(type: StickType.Right)
     }
 
