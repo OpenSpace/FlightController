@@ -36,6 +36,40 @@ class MenuViewController: OpenSpaceViewController {
 
     func changeFocus(name: String) {
         NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(focusString: name)))
+
+        var d = DateComponents()
+        d.year = 2011
+        d.month = 08
+        d.day = 06
+        d.minute = 00
+        d.hour = 00
+        d.second = 00
+
+        changeTime(date: &d)
+        }
+
+    func changeTime(date: inout DateComponents) {
+
+        validate(date: &date)
+        let funcHandle = "openspace.time.setTime"
+        let formattedDate = String(format: "%04d %02d %02d %02d:%02d:%02d"
+            , date.year!
+            , date.month!
+            , date.day!
+            , date.hour!
+            , date.minute!
+            , date.second!)
+        let script = "\(funcHandle)(\"\(formattedDate)\")"
+        NetworkManager.shared.write(data: OpenSpaceData(topic: 1, payload: OpenSpacePayload(luaScript: script)))
+    }
+
+    func validate(date: inout DateComponents) {
+        date.year = date.year ?? 2018
+        date.month = date.month ?? 01
+        date.day = date.day ?? 01
+        date.minute = date.minute ?? 00
+        date.hour = date.hour ?? 00
+        date.second = date.second ?? 00
     }
 }
 

@@ -206,6 +206,7 @@ struct OpenSpacePayload: Codable {
         case changeFocus
         case autopilot
         case friction
+        case lua
     }
 
     var type: PayloadType = .none
@@ -215,6 +216,7 @@ struct OpenSpacePayload: Codable {
     var changeFocus: OpenSpaceFocus? = nil
     var autopilot: OpenSpaceAutopilot? = nil
     var friction: OpenSpaceFriction? = nil
+    var lua: OpenSpaceLua? = nil
 
     init(type: PayloadType) {
         self.type = type
@@ -242,6 +244,11 @@ struct OpenSpacePayload: Codable {
     init(friction: Bool) {
         type = .friction
         self.friction = OpenSpaceFriction(engaged: friction)
+    }
+
+    init(luaScript: String) {
+        type = .lua
+        self.lua = OpenSpaceLua(script: luaScript)
     }
 }
 
@@ -337,4 +344,8 @@ struct OpenSpaceAutopilot: Codable {
 
 struct OpenSpaceFriction: Codable {
     var engaged: Bool = true
+}
+
+struct OpenSpaceLua: Codable {
+    var script: String? = nil
 }
