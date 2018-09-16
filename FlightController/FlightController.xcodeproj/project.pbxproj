@@ -47,6 +47,10 @@
 		43D17B2B21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
 		43D17B2C21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
 		43D17B2D21124C7300716945 /* OpenSpaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */; };
+		43ED989D214C91B900B69B60 /* SettingsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43ED989C214C91B900B69B60 /* SettingsViewCell.swift */; };
+		43ED98A1214C928700B69B60 /* SliderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43ED98A0214C928700B69B60 /* SliderViewCell.swift */; };
+		43ED98A3214C92B400B69B60 /* PickerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43ED98A2214C92B400B69B60 /* PickerViewCell.swift */; };
+		43ED98A5214C92E100B69B60 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43ED98A4214C92E100B69B60 /* SettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +123,10 @@
 		43A27DC8210A860D004BAB32 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		43A27DD0210AB028004BAB32 /* OpenSpaceNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSpaceNavigation.swift; sourceTree = "<group>"; };
 		43D17B2A21124C7300716945 /* OpenSpaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSpaceViewController.swift; sourceTree = "<group>"; };
+		43ED989C214C91B900B69B60 /* SettingsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewCell.swift; sourceTree = "<group>"; };
+		43ED98A0214C928700B69B60 /* SliderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewCell.swift; sourceTree = "<group>"; };
+		43ED98A2214C92B400B69B60 /* PickerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewCell.swift; sourceTree = "<group>"; };
+		43ED98A4214C92E100B69B60 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +204,10 @@
 				439A2054210163C9002E3CC4 /* JoystickDataTypes.swift */,
 				435164B520B617CF00A88CBD /* LaunchScreen.storyboard */,
 				435164B020B617CE00A88CBD /* Main.storyboard */,
+				43ED989C214C91B900B69B60 /* SettingsViewCell.swift */,
+				43ED98A0214C928700B69B60 /* SliderViewCell.swift */,
+				43ED98A2214C92B400B69B60 /* PickerViewCell.swift */,
+				43ED98A4214C92E100B69B60 /* SettingsViewController.swift */,
 				432C18EB2119D5C8009F596E /* MenuViewController.swift */,
 				43A27DC4210A52FB004BAB32 /* MotionManager.swift */,
 				43A27DC8210A860D004BAB32 /* NetworkManager.swift */,
@@ -398,10 +410,14 @@
 				430CDE612118EBE0008531F4 /* OpenSpaceManager.swift in Sources */,
 				43D17B2B21124C7300716945 /* OpenSpaceViewController.swift in Sources */,
 				439A2055210163C9002E3CC4 /* JoystickDataTypes.swift in Sources */,
+				43ED989D214C91B900B69B60 /* SettingsViewCell.swift in Sources */,
 				439ADEC02121F9A400E27C87 /* JoystickViewController.swift in Sources */,
+				43ED98A1214C928700B69B60 /* SliderViewCell.swift in Sources */,
+				43ED98A3214C92B400B69B60 /* PickerViewCell.swift in Sources */,
 				435164AF20B617CE00A88CBD /* ConnectionViewController.swift in Sources */,
 				43A27DC9210A860D004BAB32 /* NetworkManager.swift in Sources */,
 				433B550E2136186600888D45 /* FocusNodeCollectionViewController.swift in Sources */,
+				43ED98A5214C92E100B69B60 /* SettingsViewController.swift in Sources */,
 				432C18EC2119D5C8009F596E /* MenuViewController.swift in Sources */,
 				43A27DD1210AB028004BAB32 /* OpenSpaceNavigation.swift in Sources */,
 				431E5B9820F87BED008715AD /* WebsocketManager.swift in Sources */,
