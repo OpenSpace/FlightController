@@ -51,7 +51,7 @@ extension SettingsViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "settingsViewCell", for: indexPath) as? SettingsViewCell else {
             fatalError("No settingsViewCell")
         }
-        cell.label.text = store.
+        //cell.label.text = store.
         return cell
     }
 }

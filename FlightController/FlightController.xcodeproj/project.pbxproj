@@ -316,6 +316,7 @@
 				TargetAttributes = {
 					435164A820B617CE00A88CBD = {
 						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 1000;
 					};
 					435164BC20B617CF00A88CBD = {
 						CreatedOnToolsVersion = 9.3.1;
@@ -629,7 +630,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.openspaceproject.FlightController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -651,7 +652,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.openspaceproject.FlightController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -115,12 +115,12 @@ class JoystickViewController: OpenSpaceViewController {
         // Start a timer to send touch events from this view
         let timer = Timer(timeInterval: JoystickViewController.refreshRate, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
 
-        RunLoop.current.add(timer, forMode: .commonModes)
+        RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
         timer.fire()
         senderTimer = timer
     }
 
-    override func preferredScreenEdgesDeferringSystemGestures() -> UIRectEdge {
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
         return [.all]
     }
 

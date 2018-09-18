@@ -148,10 +148,10 @@ extension MenuViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         }
 
         guard let nodes = n, row < nodes.count else {
-            return NSAttributedString(string: "----\(row)----", attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
+            return NSAttributedString(string: "----\(row)----", attributes: [NSAttributedString.Key.foregroundColor:UIColor.darkGray])
         }
 
-        return NSAttributedString(string: nodes[row], attributes: [NSAttributedStringKey.foregroundColor:UIColor.darkGray])
+        return NSAttributedString(string: nodes[row], attributes: [NSAttributedString.Key.foregroundColor:UIColor.darkGray])
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

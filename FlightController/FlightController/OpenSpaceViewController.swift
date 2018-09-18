@@ -25,7 +25,7 @@ class OpenSpaceViewController: UIViewController {
         }
     }
 
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }
 
